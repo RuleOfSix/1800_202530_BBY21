@@ -57,6 +57,7 @@ elmo-hikes/
 ## Contributors
 
 - Min - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
+- Justin - BCIT CST Student who would rather be asleep, ut still enjoys coding. Fun fact: Has won the U18 NSIHL playoffs
 - **June Pyle** - BCIT CST Student with a passion for networking and low-level software. Fun fact: Loves solving Rubik's Cubes in under a minute.
 
 ---
