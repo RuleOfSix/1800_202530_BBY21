@@ -1,1 +1,10 @@
+/* Class for fixing alignment on Material Design Icons;
+ * if you're having an issue where an icon is too high
+ * next to text, add this class to span for that icon. */
+.icon-align {
+  vertical-align: text-bottom;
+}
 
+.bg-info {
+  background-color: #a675a1 !important;
+}
