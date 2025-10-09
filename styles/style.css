@@ -8,3 +8,25 @@
 .bg-info {
   background-color: #a675a1 !important;
 }
+
+/* CTA */
+
+.cta__p-container {
+  padding: 1rem;
+  background-color: #faf4f8;
+  color: #333333;
+  font-size: 1.2rem;
+}
+
+.btn-primary {
+  background-color: #008080;
+  color: #ffffff;
+  font-size: 130%;
+  border-color: #008080;
+}
+
+.btn-primary:hover {
+  background-color: #006666;
+  transform: translateY(-4px);
+  transition: all 0.2s ease-in-out;
+}
