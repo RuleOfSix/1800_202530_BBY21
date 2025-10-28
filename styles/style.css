@@ -38,6 +38,24 @@
   margin: 0 auto;
   margin: 40px 10px;
   padding: 0;
-  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-family:
+    Arial,
+    Helvetica Neue,
+    Helvetica,
+    sans-serif;
   font-size: 16px;
+}
+
+/* Navbar & Footer */
+navbar-component .nav-item,
+footer-component .nav-item {
+  flex-grow: 1;
+  flex-basis: 0;
+}
+
+@media screen and (max-width: 991px) {
+  navbar-component span.material-icons-outlined,
+  footer-component span.material-icons-outlined {
+    font-size: calc(2.35rem + 1.5vw) !important;
+  }
 }
