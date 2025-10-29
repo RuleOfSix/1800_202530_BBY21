@@ -1,22 +1,11 @@
-/* Setting global variables. Currently using this for color scheme */
-:root {
-  --bg-dark: #302244;
-  --nav-dark: #4d376d;
-  --card-dark: #58477d;
-  --text-dark: #e6dff6;
-  --button-dark: #99f8ba;
-  --button-text-dark: #000000;
-  --button-hover-dark: #79f6a5;
-}
-
-/* Dark theme colors */
+/* Dark theme colors (light theme not decided upon yet) */
 [theme="dark"] {
-  --bg-color: var(--bg-dark);
-  --text-color: var(--text-dark);
-  --nav-color: var(--nav-dark);
-  --card-color: var(--card-dark);
-  --button-color: var(--button-dark);
-  --button-hover-color: var(--button-hover-dark);
+  --bg-color: #272130;
+  --text-color: #f3effb;
+  --nav-color: #443b54;
+  --card-color: #443b54;
+  --button-color: #99f8ba;
+  --button-text-color: #03260f;
 }
 
 body {
@@ -43,20 +32,19 @@ body {
 
 .cta__p-container {
   padding: 1rem;
-  background-color: var(--card-color);
   color: var(--text-color);
   font-size: 1.2rem;
 }
 
 .cta-container .btn-primary {
   background-color: var(--button-color);
-  color: var(--text-color);
+  color: var(--button-text-color);
   font-size: 130%;
   border-color: #008080;
 }
 
 .cta-container .btn-primary:hover {
-  background-color: var(--button-hover-color);
+  background-color: rgb(from var(--button-color) r g b / 0.7);
   transform: translateY(-4px);
   transition: all 0.2s ease-in-out;
 }
@@ -81,6 +69,17 @@ navbar-component .nav-item,
 footer-component .nav-item {
   flex-grow: 1;
   flex-basis: 0;
+}
+
+navbar-component .nav-link,
+footer-component .nav-link {
+  color: var(--text-color);
+}
+
+navbar-component .nav-link:hover,
+footer-component .nav-link:hover {
+  color: rgb(from var(--text-color) r g b / 0.7);
+  transition: all 0.2s ease-in-out;
 }
 
 @media screen and (max-width: 991px) {
