@@ -1,3 +1,33 @@
+/* Setting global variables. Currently using this for color scheme */
+:root {
+  --bg-dark: #302244;
+  --nav-dark: #4d376d;
+  --card-dark: #58477d;
+  --text-dark: #e6dff6;
+  --button-dark: #99f8ba;
+  --button-text-dark: #000000;
+  --button-hover-dark: #79f6a5;
+}
+
+/* Dark theme colors */
+[theme="dark"] {
+  --bg-color: var(--bg-dark);
+  --text-color: var(--text-dark);
+  --nav-color: var(--nav-dark);
+  --card-color: var(--card-dark);
+  --button-color: var(--button-dark);
+  --button-hover-color: var(--button-hover-dark);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.bg-light {
+  background-color: var(--card-color) !important;
+}
+
 /* Class for fixing alignment on Material Design Icons;
  * if you're having an issue where an icon is too high
  * next to text, add this class to span for that icon. */
@@ -6,27 +36,27 @@
 }
 
 .bg-info {
-  background-color: #a675a1 !important;
+  background-color: var(--nav-color) !important;
 }
 
 /* CTA */
 
 .cta__p-container {
   padding: 1rem;
-  background-color: #faf4f8;
-  color: #333333;
+  background-color: var(--card-color);
+  color: var(--text-color);
   font-size: 1.2rem;
 }
 
 .cta-container .btn-primary {
-  background-color: #008080;
-  color: #ffffff;
+  background-color: var(--button-color);
+  color: var(--text-color);
   font-size: 130%;
   border-color: #008080;
 }
 
 .cta-container .btn-primary:hover {
-  background-color: #006666;
+  background-color: var(--button-hover-color);
   transform: translateY(-4px);
   transition: all 0.2s ease-in-out;
 }
