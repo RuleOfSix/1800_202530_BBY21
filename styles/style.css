@@ -11,6 +11,7 @@
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
+  padding-bottom: 10vh;
 }
 
 .bg-light {
@@ -21,11 +22,23 @@ body {
  * if you're having an issue where an icon is too high
  * next to text, add this class to span for that icon. */
 .icon-align {
-  vertical-align: text-bottom;
+  vertical-align: bottom;
 }
 
 .bg-info {
   background-color: var(--nav-color) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  font-size: 130%;
+  border: 0;
+}
+
+.btn-primary:hover {
+  background-color: rgb(from var(--button-color) r g b / 0.7);
 }
 
 /* CTA */
@@ -40,7 +53,7 @@ body {
   background-color: var(--button-color);
   color: var(--button-text-color);
   font-size: 130%;
-  border-color: #008080;
+  border: 0;
 }
 
 .cta-container .btn-primary:hover {
@@ -62,6 +75,12 @@ body {
     Helvetica,
     sans-serif;
   font-size: 16px;
+}
+
+/* Checklist */
+
+.checklist-item {
+  background-color: var(--card-color);
 }
 
 /* Navbar & Footer */
@@ -89,6 +108,3 @@ footer-component .nav-link:hover {
   }
 }
 /* checklist */
-
-
-

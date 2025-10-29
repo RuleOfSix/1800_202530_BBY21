@@ -4,3 +4,6 @@ import "bootstrap";
 import "../styles/style.css";
 
 import "./calendar.js";
+
+const body = document.querySelector("body");
+body.setAttribute("theme", "dark");
