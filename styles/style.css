@@ -1,32 +1,63 @@
+/* Dark theme colors (light theme not decided upon yet) */
+[theme="dark"] {
+  --bg-color: #272130;
+  --text-color: #f3effb;
+  --nav-color: #443b54;
+  --card-color: #443b54;
+  --button-color: #99f8ba;
+  --button-text-color: #03260f;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding-bottom: 10vh;
+}
+
+.bg-light {
+  background-color: var(--card-color) !important;
+}
+
 /* Class for fixing alignment on Material Design Icons;
  * if you're having an issue where an icon is too high
  * next to text, add this class to span for that icon. */
 .icon-align {
-  vertical-align: text-bottom;
+  vertical-align: bottom;
 }
 
 .bg-info {
-  background-color: #a675a1 !important;
+  background-color: var(--nav-color) !important;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  font-size: 130%;
+  border: 0;
+}
+
+.btn-primary:hover {
+  background-color: rgb(from var(--button-color) r g b / 0.7);
 }
 
 /* CTA */
 
 .cta__p-container {
   padding: 1rem;
-  background-color: #faf4f8;
-  color: #333333;
+  color: var(--text-color);
   font-size: 1.2rem;
 }
 
 .cta-container .btn-primary {
-  background-color: #008080;
-  color: #ffffff;
+  background-color: var(--button-color);
+  color: var(--button-text-color);
   font-size: 130%;
-  border-color: #008080;
+  border: 0;
 }
 
 .cta-container .btn-primary:hover {
-  background-color: #006666;
+  background-color: rgb(from var(--button-color) r g b / 0.7);
   transform: translateY(-4px);
   transition: all 0.2s ease-in-out;
 }
@@ -46,11 +77,28 @@
   font-size: 16px;
 }
 
+/* Checklist */
+
+.checklist-item {
+  background-color: var(--card-color);
+}
+
 /* Navbar & Footer */
 navbar-component .nav-item,
 footer-component .nav-item {
   flex-grow: 1;
   flex-basis: 0;
+}
+
+navbar-component .nav-link,
+footer-component .nav-link {
+  color: var(--text-color);
+}
+
+navbar-component .nav-link:hover,
+footer-component .nav-link:hover {
+  color: rgb(from var(--text-color) r g b / 0.7);
+  transition: all 0.2s ease-in-out;
 }
 
 @media screen and (max-width: 991px) {
@@ -60,6 +108,3 @@ footer-component .nav-item {
   }
 }
 /* checklist */
-
-
-
