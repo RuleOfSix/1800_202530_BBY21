@@ -5,7 +5,28 @@ class Navbar extends HTMLElement {
     this.updateFirstItem();
   }
 
+  // Generate the profile item HTML only if the user is logged in.
+  buildProfileHTML() {
+    const storedValue = localStorage.getItem("isLoggedIn");
+    const isLoggedIn = storedValue === "true";
+
+    if (isLoggedIn) {
+      return ` <li class="nav-item d-flex flex-row justify-content-center">
+              <a
+                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
+                href="/wip.html"
+              >
+                <span class="material-icons-outlined icon-align fs-1">account_circle</span>&nbsp;Profile
+              </a>
+            </li>`;
+    } else {
+      // logout
+      return "";
+    }
+  }
+
   render() {
+    const profileItemHTML = this.buildProfileHTML();
     this.innerHTML = `
       <nav class="navbar navbar-expand-lg navbar-light p-0 bg-info">
         <div class="container-fluid p-0 m-0">
@@ -20,14 +41,7 @@ class Navbar extends HTMLElement {
                 <!--determined by js-->
               </a>
             </li>
-            <li class="nav-item d-flex flex-row justify-content-center">
-              <a
-                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
-                href="/wip.html"
-              >
-                <span class="material-icons-outlined icon-align fs-1">account_circle</span>&nbsp;Profile
-              </a>
-            </li>
+           ${profileItemHTML}
             <li class="nav-item d-flex flex-row justify-content-end">
               <a
                 class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
