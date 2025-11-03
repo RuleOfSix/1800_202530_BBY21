@@ -1,16 +1,25 @@
+import { onAuthReady } from "/src/authentication.js";
+
 class Navbar extends HTMLElement {
+  isLoggedIn;
+
   constructor() {
     super();
     this.render();
     this.updateFirstItem();
+
+    onAuthReady((user) => {
+      if (user) {
+        this.isLoggedIn = true;
+      } else {
+        this.isLoggedIn = false;
+      }
+    });
   }
 
   // Generate the profile item HTML only if the user is logged in.
   buildProfileHTML() {
-    const storedValue = localStorage.getItem("isLoggedIn");
-    const isLoggedIn = storedValue === "true";
-
-    if (isLoggedIn) {
+    if (this.isLoggedIn) {
       return ` <li class="nav-item d-flex flex-row justify-content-center">
               <a
                 class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
@@ -20,7 +29,6 @@ class Navbar extends HTMLElement {
               </a>
             </li>`;
     } else {
-      // logout
       return "";
     }
   }
