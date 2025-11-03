@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Custom HTML components (navbar, footer, etc.) -->
+        <script type="module" src="/src/components/navbar.js" defer></script>
+        <script type="module" src="/src/components/footer.js" defer></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+        <title>Settings</title>
+    </head>
+    <body>
+        <navbar-component></navbar-component>
+        <div class="container">
+            <div><h1>Settings</h1></div>
+            <div class="container rounded-3 my-2 p-3 w-75 d-flex checklist-item">
+                <span class="material-icons-outlined icon-align fs-1 me-2 "> 
+                    toggle_on 
+                </span> 
+                Dark Mode
+            </div>
+            <div class="container rounded-3 my-2 p-3 w-75 d-flex checklist-item">
+                <span class="material-icons-outlined icon-align fs-1 me-2"> 
+                    toggle_on 
+                </span> 
+                Notifications
+            </div>
+        </div>
+      
+
+        <footer-component></footer-component>
+            <script type="module" src="./src/main.js"></script>
+    </body>
+    
+</html>
