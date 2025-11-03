@@ -1,4 +1,3 @@
-
 // Import the initialized Firebase Authentication object
 import { auth } from "/src/firebaseConfig.js";
 
@@ -15,9 +14,12 @@ export async function loginUser(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 
-
 export async function signupUser(name, email, password) {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
   await updateProfile(userCredential.user, { displayName: name });
   return userCredential.user;
 }
@@ -61,4 +63,3 @@ export function authErrorMessage(error) {
 
   return map[code] || "Something went wrong. Please try again.";
 }
-
