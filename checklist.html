@@ -2,26 +2,35 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width; initial-scale=1.0;" />
     <title>HubLearning Checklist</title>
 
     <!-- Custom HTML components (navbar, footer, etc.) -->
     <script type="module" src="/src/components/navbar.js" defer></script>
     <script type="module" src="/src/components/footer.js" defer></script>
+    <script type="module" src="/src/components/closeButton.js" defer></script>
 
     <!-- Google material icons -->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
       rel="stylesheet"
     />
+
+    <!-- Tagify - Frontend library for tag inputs -->
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css"
+      rel="stylesheet"
+      type="text/css"
+    />
   </head>
   <body>
     <navbar-component></navbar-component>
 
-    <div
-      class="cta__p-container text-center text-md-start d-flex flex-column align-items-center"
-    >
-      <div class="cta-container text-center rounded-3 my-2 py-3 w-75 fs-3">
-        Group Name
+    <div class="container d-flex flex-column align-items-center">
+      <div class="container text-center p-3">
+        <h1>Group Name</h2>
       </div>
       <p class="fs-3 header text-center">
         <span class="material-icons-outlined fs-1 icon-align">
@@ -32,16 +41,14 @@
           arrow_right
         </span>
       </p>
-      <div class="cta-container d-flex justify-content-end w-75">
-        <a class="btn btn-primary rounded-pill" href="#"
-          ><span class="material-icons-outlined icon-align fs-1"
-            >filter_list</span
-          >
+      <div class="container d-flex justify-content-end w-75">
+        <a class="btn btn-primary rounded-pill" href="#">
+          <span class="material-icons-outlined icon-align fs-1">filter_list</span>
           Filter by...&nbsp;
         </a>
       </div>
       <div
-        class="cta-container rounded-3 my-2 p-3 w-75 d-flex align-items-center checklist-item"
+        class="container rounded-3 my-2 p-3 w-75 d-flex align-items-center checklist-item"
       >
         <span class="material-icons-outlined icon-align fs-1 me-2">
           check_box_outline_blank
@@ -50,7 +57,7 @@
       </div>
 
       <div
-        class="cta-container rounded-3 w-75 my-2 p-3 d-flex align-items-center checklist-item"
+        class="container rounded-3 w-75 my-2 p-3 d-flex align-items-center checklist-item"
       >
         <span
           class="material-icons-outlined icon-align align-self-end fs-1 me-2"
@@ -60,8 +67,44 @@
         Task #2
       </div>
     </div>
-    <div class="cta-container text-center mt-5">
-      <a><span class="material-icons-outlined fs-1">add_circle</span> </a>
+
+    <div class="container text-center mt-5">
+      <a class="btn btn-icon" id="addTaskButton">
+        <span class="material-icons-outlined fs-1 add-icon">add_circle</span>
+      </a>
+    </div>
+
+    <div class="darkening-screen" hidden></div>
+
+    <div
+      id="taskCreationMenu"
+      class="pop-up rounded top-5.0 start-50 translate-middle py-4 px-5"
+      hidden
+    >
+      <close-button></close-button>
+      <h3 class="text-center">Create a new task</h3>
+      <form class="vstack gap-3 align-items-center mt-3">
+        <div>
+          <label for="taskName" class="form-label">Name</label>
+          <input id="taskName" class="form-control" type="text" />
+        </div>
+        <div>
+          <label for="taskDate" class="form-label">Due Date</label>
+          <input id="taskDate" class="form-control" type="date" />
+        </div>
+        <div>
+          <label for="taskTags" class="form-label">Tags (Optional)</label>
+          <input id="taskTags" class="form-control" type="text" />
+        </div>
+        <div class="d-flex justify-content-center">
+          <input
+            id="submitTask"
+            class="btn btn-primary"
+            type="button"
+            value="Create Task"
+          />
+        </div>
+      </form>
     </div>
 
     <template id="checkbox-template">
@@ -79,6 +122,7 @@
 
     <footer-component></footer-component>
 
-    <script type="module" src="./src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/checklist.js"></script>
   </body>
 </html>
