@@ -85,8 +85,6 @@ function initAuthUI() {
     setSubmitDisabled(loginForm, true);
     try {
       await loginUser(email, password);
-      // This flag should be set to 'false' upon user logout.
-      localStorage.setItem("isLoggedIn", "true");
       location.href = redirectUrl;
     } catch (err) {
       showError(authErrorMessage(err));
@@ -110,8 +108,6 @@ function initAuthUI() {
     setSubmitDisabled(signupForm, true);
     try {
       await signupUser(name, email, password);
-      // This flag should be set to 'false' upon user logout.
-      localStorage.setItem("isLoggedIn", "true");
       location.href = redirectUrl;
     } catch (err) {
       showError(authErrorMessage(err));
