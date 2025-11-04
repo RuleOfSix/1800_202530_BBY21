@@ -83,4 +83,20 @@ function tagValueEquals(tag1) {
 }
 //Warning Unstable code
 
+// checklist greyout
+ let checklistItems = document.querySelectorAll(".checklist-item");
+  for(let checklistItem of checklistItems) {
+    checklistItem.addEventListener("click", function(){
+      const icon = this.querySelector("span");
+      if (this.classList.contains("checked")) {
+        this.classList.remove("checked");
+        icon.innerText = "check_box_outline_blank";
+      }else {
+      this.classList.add("checked");
+      icon.innerText = "check_box";
+      }
+    });
+   
+  }
+
 

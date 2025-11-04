@@ -4,8 +4,14 @@
   --text-color: #f3effb;
   --nav-color: #443b54;
   --card-color: #443b54;
+  
   --button-color: #99f8ba;
   --button-text-color: #03260f;
+}
+[theme="light"] {
+  --bg-color: white;
+  --text-color: black;
+  
 }
 
 body {
@@ -106,6 +112,11 @@ form {
 
 .checklist-item {
   background-color: var(--card-color);
+  cursor: pointer;
+}
+
+.checked {
+  opacity: 75%;
 }
 
 /* Navbar & Footer */
