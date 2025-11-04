@@ -1,5 +1,5 @@
-// Import the initialized Firebase Authentication object
-import { auth } from "/src/firebaseConfig.js";
+// Import the initialized Firebase Authentication object and Database object
+import { auth, db } from "/src/firebaseConfig.js";
 
 // Import specific functions from the Firebase Auth SDK
 import {
@@ -10,6 +10,9 @@ import {
   signOut,
 } from "firebase/auth";
 
+// Import Firestore functions to store user document on signup
+import { doc, setDoc } from "firebase/firestore";
+
 export async function loginUser(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
@@ -18,10 +21,19 @@ export async function signupUser(name, email, password) {
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
-  await updateProfile(userCredential.user, { displayName: name });
-  return userCredential.user;
+  const user = userCredential.user;
+  await updateProfile(user, { displayName: name });
+
+  await setDoc(doc(db, "users", user.uid), {
+    name: name,
+    email: email,
+    groupIDs: [],
+    tasks: [],
+  });
+
+  return user;
 }
 
 export async function logoutUser() {
