@@ -6,6 +6,8 @@ import {
   doc,
   onSnapshot,
   getDoc,
+  updateDoc,
+  arrayUnion,
 } from "firebase/firestore";
 import { getUserGroupData } from "/src/group.js";
 
@@ -20,12 +22,15 @@ const groupListContainer = document.getElementById("groupListContainer");
 
 addGroupButton.addEventListener("click", toggleGroupCreationMenu);
 
-submitButton.addEventListener("click", () => {
+submitButton.addEventListener("click", async () => {
   const groupName = nameInput?.value?.trim() ?? "";
-  addDoc(collection(db, "groups"), {
+  const newGroupRef = await addDoc(collection(db, "groups"), {
     name: groupName,
     taskIDs: [],
     userIDs: [uid],
+  });
+  await updateDoc(doc(db, "users", uid), {
+    groupIDs: arrayUnion(newGroupRef.id),
   });
   toggleGroupCreationMenu();
 });
@@ -54,10 +59,10 @@ function renderGroupStatusMsg(userDocSnap) {
   }
 }
 
-export async function renderGroupSelection(groupDetails) {
-  try {
-    groupDetails.forEach((group) => {
-      groupListContainer.innerHTML += `
+export function renderGroupSelection(groupDetails) {
+  groupListContainer.innerHTML = ``;
+  groupDetails.forEach((group) => {
+    groupListContainer.innerHTML += `
         <div class="p-2 mb-4 bg-light rounded-4 m-5">
         <div class="container-fluid py-5 d-flex flex-column align-items-center">
           <h1 class="display-5 fw-bold text-center">
@@ -66,10 +71,7 @@ export async function renderGroupSelection(groupDetails) {
           </h1>
         </div>
       </div>`;
-    });
-  } catch (error) {
-    console.log("Error renering group list: ", error);
-  }
+  });
 }
 
 function toggleGroupCreationMenu() {

@@ -3,8 +3,8 @@ import { db } from "./firebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
 import { renderGroupSelection } from "./home.js";
 
-let groupDetails = [];
 export async function getUserGroupData(userDocSnap) {
+  let groupDetails = [];
   if (userDocSnap.exists()) {
     const userData = userDocSnap.data();
     /*
