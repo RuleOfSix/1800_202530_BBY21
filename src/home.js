@@ -30,35 +30,27 @@ submitButton.addEventListener("click", () => {
   toggleGroupCreationMenu();
 });
 
-onAuthReady(async (user) => {
+onAuthReady((user) => {
   if (!user) {
     location.href = "index.html";
     return;
   }
 
   uid = user.uid;
-  await getGroupStatusMsg(uid);
   onSnapshot(doc(db, "users", uid), getUserGroupData);
+  onSnapshot(doc(db, "users", uid), renderGroupStatusMsg);
 });
 
-async function getGroupStatusMsg(uid) {
-  try {
-    const userDocRef = doc(db, "users", uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (userDocSnap.exists()) {
-      const userData = userDocSnap.data();
-      if (userData.groupIDs && userData.groupIDs.length > 0) {
-        groupStatusMsg.innerText = "Choose a group or make a new one";
-      } else {
-        groupStatusMsg.innerText = "Create a new group to get started";
-      }
+function renderGroupStatusMsg(userDocSnap) {
+  if (userDocSnap.exists()) {
+    const userData = userDocSnap.data();
+    if (userData.groupIDs && userData.groupIDs.length > 0) {
+      groupStatusMsg.innerText = "Choose a group or make a new one";
     } else {
-      console.error("User document does not exisit in Firesotre.");
+      groupStatusMsg.innerText = "Create a new group to get started";
     }
-  } catch (error) {
-    console.error("Failed to display group status: ", error);
-    groupStatusMsg.innerText = "Error loading your data";
+  } else {
+    console.error("User data missing from database.");
   }
 }
 

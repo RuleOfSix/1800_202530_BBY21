@@ -18,7 +18,6 @@ export async function getUserGroupData(userDocSnap) {
       for (let groupID of userData.groupIDs) {
         const groupDocRef = doc(db, "groups", groupID);
         const groupDocSnap = await getDoc(groupDocRef);
-
         if (groupDocSnap.exists()) {
           groupDetails.push({
             groupID: groupID,
