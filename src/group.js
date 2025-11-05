@@ -1,21 +1,32 @@
 // Fetches the user document from Firebase and returns group data
 import { db } from "./firebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
+import { renderGroupSelection } from "./home.js";
 
-export async function getUserGroupData(noGroupUser) {
-  const userDocRef = doc(db, "users", "noGroupUser");
-  const userDocSnap = await getDoc(userDocRef);
-  let hasGroup = false;
-
+let groupDetails = [];
+export async function getUserGroupData(userDocSnap) {
   if (userDocSnap.exists()) {
     const userData = userDocSnap.data();
+    /*
+      Each array entry is an object that looks like this:
+      { groupName: "name as string",
+        groupID: "id as string"
+      }
+    */
+
     if (userData.groupIDs && userData.groupIDs.length > 0) {
-      hasGroup = true;
-      return hasGroup;
-    } else {
-      return hasGroup;
+      for (let groupID of userData.groupIDs) {
+        const groupDocRef = doc(db, "groups", groupID);
+        const groupDocSnap = await getDoc(groupDocRef);
+        if (groupDocSnap.exists()) {
+          groupDetails.push({
+            groupID: groupID,
+            ...groupDocSnap.data(),
+          });
+        }
+      }
     }
-  } else {
-    console.error("User document does not exisit in Firesotre.");
   }
+
+  renderGroupSelection(groupDetails);
 }

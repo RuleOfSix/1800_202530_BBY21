@@ -1,19 +1,20 @@
 import { onAuthReady } from "/src/authentication.js";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 class Navbar extends HTMLElement {
-  isLoggedIn;
-
   constructor() {
     super();
+    this.isLoggedIn = false;
     this.render();
     this.updateFirstItem();
 
-    onAuthReady((user) => {
+    onAuthReady(async (user) => {
       if (user) {
         this.isLoggedIn = true;
       } else {
         this.isLoggedIn = false;
       }
+      this.render();
     });
   }
 
