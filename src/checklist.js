@@ -1,6 +1,6 @@
 import { db } from "/src/firebaseConfig.js";
 import { onAuthReady } from "/src/authentication.js";
-import {CheckItem}from "/src/components/checkItem.js";
+import { CheckItem } from "/src/components/checkItem.js";
 import {
   collection,
   doc,
@@ -80,7 +80,6 @@ onSnapshot(groupDoc, async (snap) => {
     }
   }
   tagify.whitelist = currentTags;
-  console.log(currentTags);
 });
 
 function tagValueEquals(tag1) {
@@ -88,8 +87,3 @@ function tagValueEquals(tag1) {
     return tag1.value === tag2.value;
   };
 }
-//Warning Unstable code
-
-
-
-
