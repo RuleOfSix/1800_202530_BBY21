@@ -14,16 +14,25 @@ import { getUserGroupData } from "/src/group.js";
 const addGroupButton = document.getElementById("addGroupButton");
 const groupCreationMenu = document.getElementById("groupCreationMenu");
 const darkeningScreen = document.querySelector(".darkening-screen");
+const groupForm = groupCreationMenu.querySelector("#groupForm");
 const nameInput = groupCreationMenu.querySelector("#groupName");
 const submitButton = groupCreationMenu.querySelector("#submitGroup");
-let uid;
+const groupErrorBlock = groupCreationMenu.querySelector("#groupErrorBlock");
+const closeButton = groupCreationMenu.querySelector("close-button");
 const groupStatusMsg = document.getElementById("groupStatusMsg");
 const groupListContainer = document.getElementById("groupListContainer");
+let uid;
 
 addGroupButton.addEventListener("click", toggleGroupCreationMenu);
 
 submitButton.addEventListener("click", async () => {
+  groupErrorBlock.hidden = true;
   const groupName = nameInput?.value?.trim() ?? "";
+  const groupNamePattern = /^[a-zA-Z0-9 ]{1,20}$/;
+  if (groupName === "" || !groupNamePattern.test(groupName)) {
+    groupErrorBlock.hidden = false;
+    return;
+  }
   const newGroupRef = await addDoc(collection(db, "groups"), {
     name: groupName,
     taskIDs: [],
@@ -33,6 +42,17 @@ submitButton.addEventListener("click", async () => {
     groupIDs: arrayUnion(newGroupRef.id),
   });
   toggleGroupCreationMenu();
+});
+
+// Make pressing "Enter" on the name input trigger a group submission
+groupForm.addEventListener("submit", function (event) {
+  submitButton.click();
+  event.preventDefault();
+});
+
+// Clear error text when form is closed
+closeButton.addEventListener("click", function (event) {
+  groupErrorBlock.hidden = true;
 });
 
 onAuthReady((user) => {
