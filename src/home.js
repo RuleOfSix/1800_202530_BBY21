@@ -41,6 +41,7 @@ submitButton.addEventListener("click", async () => {
   await updateDoc(doc(db, "users", uid), {
     groupIDs: arrayUnion(newGroupRef.id),
   });
+  groupName.value = "";
   toggleGroupCreationMenu();
 });
 
