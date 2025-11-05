@@ -37,7 +37,7 @@ onAuthReady(async (user) => {
   }
 
   uid = user.uid;
-  getGroupStatusMsg(uid);
+  await getGroupStatusMsg(uid);
   onSnapshot(doc(db, "users", uid), getUserGroupData);
 });
 
