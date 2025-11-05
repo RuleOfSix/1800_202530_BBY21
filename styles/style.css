@@ -4,14 +4,13 @@
   --text-color: #f3effb;
   --nav-color: #443b54;
   --card-color: #443b54;
-  
+
   --button-color: #99f8ba;
   --button-text-color: #03260f;
 }
 [theme="light"] {
   --bg-color: white;
   --text-color: black;
-  
 }
 
 body {
@@ -151,6 +150,11 @@ footer-component {
 
 .close-button:hover {
   opacity: 70%;
+}
+
+/* Error text for form validation */
+.error-text {
+  color: red;
 }
 
 /* Size adjustment on certain icons for small screens;
