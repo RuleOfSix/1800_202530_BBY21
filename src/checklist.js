@@ -1,5 +1,6 @@
 import { db } from "/src/firebaseConfig.js";
 import { onAuthReady } from "/src/authentication.js";
+import {CheckItem}from "/src/components/checkItem.js";
 import {
   collection,
   doc,
@@ -21,6 +22,7 @@ const submitButton = taskCreationMenu.querySelector("#submitTask");
 const url = new URL(window.location.href);
 const groupID = url.searchParams.get("groupID");
 const groupDoc = doc(db, "groups", groupID);
+const checklist = document.getElementById("checklist-container");
 let uid;
 let currentTags = [];
 
@@ -62,10 +64,15 @@ onAuthReady((user) => {
 onSnapshot(groupDoc, async (snap) => {
   currentTags = [];
   const groupTasks = snap.get("taskIDs");
+  checklist.innerHTML = "";
   for (const task of groupTasks) {
     const taskDoc = doc(db, "tasks", task);
     const taskSnap = await getDoc(taskDoc);
     const taskData = taskSnap?.data();
+    let taskItem = new CheckItem();
+    let taskLabel = taskItem.querySelector(".task-name");
+    taskLabel.innerText = taskData.name;
+    checklist.appendChild(taskItem);
     for (const tag of taskData.tags) {
       if (!currentTags.some(tagValueEquals(tag))) {
         currentTags.push(tag);
@@ -83,20 +90,6 @@ function tagValueEquals(tag1) {
 }
 //Warning Unstable code
 
-// checklist greyout
- let checklistItems = document.querySelectorAll(".checklist-item");
-  for(let checklistItem of checklistItems) {
-    checklistItem.addEventListener("click", function(){
-      const icon = this.querySelector("span");
-      if (this.classList.contains("checked")) {
-        this.classList.remove("checked");
-        icon.innerText = "check_box_outline_blank";
-      }else {
-      this.classList.add("checked");
-      icon.innerText = "check_box";
-      }
-    });
-   
-  }
+
 
 

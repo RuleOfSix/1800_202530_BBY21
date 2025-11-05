@@ -9,6 +9,7 @@
     <script type="module" src="/src/components/navbar.js" defer></script>
     <script type="module" src="/src/components/footer.js" defer></script>
     <script type="module" src="/src/components/closeButton.js" defer></script>
+    <script type="module" src="/src/components/checkItem.js" defer></script>
 
     <!-- Google material icons -->
     <link
@@ -47,35 +48,8 @@
           Filter by...&nbsp;
         </a>
       </div>
-      <div
-        class="container rounded-3 my-2 p-3 w-75 d-flex align-items-center checklist-item"
-      >
-        <span class="material-icons-outlined icon-align fs-1 me-2">
-          check_box_outline_blank
-        </span>
-        Task #1
-      </div>
 
-      <div
-        class="container rounded-3 w-75 my-2 p-3 d-flex align-items-center checklist-item"
-      >
-        <span
-          class="material-icons-outlined icon-align align-self-end fs-1 me-2"
-        >
-          check_box_outline_blank
-        </span>
-        Task #2
-      </div>
-   
-    
-          <div
-        class="container rounded-3 w-75 my-2 p-3 d-flex align-items-center checklist-item checked"
-      >
-        <span class="material-icons-outlined icon-align align-self-end fs-1 me-2" >
-          check_box
-        </span>
-        Completed task
-      </div>
+      <div class="container vstack gap-3" id="checklist-container"></div>
      </div>
 
     <div class="container text-center mt-5">
@@ -117,22 +91,11 @@
       </form>
     </div>
 
-    <template id="checkbox-template">
-      <div
-        class="cta-container rounded-3 w-75 my-2 p-3 d-flex align-items-center checklist-item"
-      >
-        <span
-          class="material-icons-outlined icon-align align-self-end fs-1 me-2"
-        >
-          check_box_outline_blank
-        </span>
-        <!-- Task text -->
-      </div>
-    </template>
 
     <footer-component></footer-component>
 
     <script type="module" src="/src/main.js"></script>
     <script type="module" src="/src/checklist.js"></script>
+  
   </body>
 </html>
