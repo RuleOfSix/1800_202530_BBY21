@@ -31,26 +31,28 @@
 
     <div class="container d-flex flex-column align-items-center">
       <div class="container text-center p-3">
-        <h1>Group Name</h1>
+        <h1 id="group-name">Group Name</h1>
       </div>
       <p class="fs-3 header text-center">
         <span class="material-icons-outlined fs-1 icon-align">
           arrow_left
         </span>
-        Date
+        <span id="cur-date">Date</span>
         <span class="material-icons-outlined fs-1 icon-align">
           arrow_right
         </span>
       </p>
       <div class="container d-flex justify-content-end w-75">
         <a class="btn btn-primary rounded-pill" href="#">
-          <span class="material-icons-outlined icon-align fs-1">filter_list</span>
+          <span class="material-icons-outlined icon-align fs-1"
+            >filter_list</span
+          >
           Filter by...&nbsp;
         </a>
       </div>
 
       <div class="container vstack gap-3" id="checklist-container"></div>
-     </div>
+    </div>
 
     <div class="container text-center mt-5">
       <a class="btn btn-icon" id="addTaskButton">
@@ -91,11 +93,9 @@
       </form>
     </div>
 
-
     <footer-component></footer-component>
 
     <script type="module" src="/src/main.js"></script>
     <script type="module" src="/src/checklist.js"></script>
-  
   </body>
 </html>
