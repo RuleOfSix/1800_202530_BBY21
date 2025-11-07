@@ -29,7 +29,8 @@ const curDate = new Date(Date.now());
 const dateHeader = document.getElementById("cur-date");
 const lowerDateButton = document.getElementById("lower-date");
 const raiseDateButton = document.getElementById("raise-date");
-const oneWeek = 1000 * 60 * 60 * 24 * 7; /* Exactly 7 days in milliseconds */
+const oneDay = 1000 * 60 * 60 * 24; /* Exactly one day in milliseconds */
+const oneWeek = oneDay * 7; /* Exactly 7 days in milliseconds */
 const dateFormat = new Intl.DateTimeFormat("en-us", {
   weekday: "long",
   month: "long",
@@ -119,15 +120,18 @@ async function renderTasks(groupSnap) {
     const taskSnap = await getDoc(taskDoc);
     const taskData = taskSnap?.data();
 
-    /* Make a new checklist item with the task's name;
-     * we can do it this way becaue we made CheckItem a
-     * custom HTML element*/
-    let taskItem = new CheckItem();
-    let taskLabel = taskItem.querySelector(".task-name");
-    taskLabel.innerText = taskData.name;
+    /* Only add tasks that are due the current week */
+    if (sameWeekAs(curDate)(taskData)) {
+      /* Make a new checklist item with the task's name;
+       * we can do it this way becaue we made CheckItem a
+       * custom HTML element*/
+      let taskItem = new CheckItem();
+      let taskLabel = taskItem.querySelector(".task-name");
+      taskLabel.innerText = taskData.name;
 
-    /* Add the new checklist item to the checklist */
-    checklist.appendChild(taskItem);
+      /* Add the new checklist item to the checklist */
+      checklist.appendChild(taskItem);
+    }
 
     /* This loop builds the deduplicated list of every tag
      * in the group */
@@ -160,9 +164,13 @@ function setDate(date) {
 
 /* Changes the current date by the specified number of milliseconds, then 
    calls setDate with the new value of the current date. */
-function shiftDate(ms) {
-  curDate.setMilliseconds(curDate.getMilliseconds() + ms);
+async function shiftDate(ms) {
+  curDate.setTime(curDate.valueOf() + ms);
   setDate(curDate);
+  /* Re-render the tasks if we've already loaded auth info */
+  if (uid) {
+    renderTasks(await getDoc(doc(db, "groups", groupID)));
+  }
 }
 
 /* Don't worry about this too much. Just a helper method for
@@ -173,6 +181,27 @@ function shiftDate(ms) {
 function tagValueEquals(tag1) {
   return (tag2) => {
     return tag1.value === tag2.value;
+  };
+}
+
+/* Helper method for filtering tasks based on if the timestamp
+ * is in the same week as the given Date.
+ */
+function sameWeekAs(date) {
+  const day = date.getDay();
+  const lowBound = new Date(date.valueOf() - day * oneDay);
+  lowBound.setHours(0);
+  lowBound.setMinutes(0);
+  lowBound.setSeconds(0);
+  lowBound.setMilliseconds(0);
+  const highBound = new Date(date.valueOf() + (6 - day) * oneDay);
+  highBound.setHours(23);
+  highBound.setMinutes(59);
+  highBound.setSeconds(59);
+  highBound.setMilliseconds(999);
+  return (task) => {
+    const taskTime = task.date.toMillis();
+    return taskTime >= lowBound.valueOf() && taskTime <= highBound.valueOf();
   };
 }
 
