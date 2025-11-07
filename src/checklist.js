@@ -6,10 +6,13 @@ import {
   doc,
   setDoc,
   getDoc,
+  getDocs,
   updateDoc,
   arrayUnion,
   onSnapshot,
   Timestamp,
+  query,
+  where,
 } from "firebase/firestore";
 
 /* global constants and variables */
@@ -111,13 +114,19 @@ async function renderTasks(groupSnap) {
   /* Array of every taskID in the group */
   const groupTasks = groupSnap.get("taskIDs");
 
+  /* Get all tasks in the group */
+  const taskQuery = query(
+    collection(db, "tasks"),
+    where("__name__", "in", groupTasks),
+  );
+  const taskQuerySnap = await getDocs(taskQuery);
+
   /* Clear checklist before re-rendering */
   checklist.innerHTML = "";
 
-  for (const task of groupTasks) {
+  /* Iterate over every task in the group */
+  taskQuerySnap.forEach((taskSnap) => {
     /* Get the task data */
-    const taskDoc = doc(db, "tasks", task);
-    const taskSnap = await getDoc(taskDoc);
     const taskData = taskSnap?.data();
 
     /* Only add tasks that are due the current week */
@@ -140,7 +149,7 @@ async function renderTasks(groupSnap) {
         currentTags.push(tag);
       }
     }
-  }
+  });
 
   /* The attribute name is confusing, but this sets the autocomplete
    * suggestion list for the tag input to the list of the tags
