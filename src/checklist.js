@@ -27,6 +27,9 @@ const checklist = document.getElementById("checklist-container");
 const groupName = document.getElementById("group-name");
 const curDate = new Date(Date.now());
 const dateHeader = document.getElementById("cur-date");
+const lowerDateButton = document.getElementById("lower-date");
+const raiseDateButton = document.getElementById("raise-date");
+const oneWeek = 1000 * 60 * 60 * 24 * 7; /* Exactly 7 days in milliseconds */
 const dateFormat = new Intl.DateTimeFormat("en-us", {
   weekday: "long",
   month: "long",
@@ -60,6 +63,14 @@ function renderPage() {
 
   /* Set date at top of page to today's date */
   setDate(curDate);
+
+  /* Add click event listeners to the buttons that shift the date */
+  lowerDateButton.addEventListener("click", () => {
+    shiftDate(-oneWeek);
+  });
+  raiseDateButton.addEventListener("click", () => {
+    shiftDate(oneWeek);
+  });
 }
 
 /* Toggles the task creation form modal */
@@ -89,6 +100,9 @@ function createTask() {
 /* Renders all tasks in the group, and generates the tagify
  * autocomplete suggestion list. */
 async function renderTasks(groupSnap) {
+  /* Set group name */
+  groupName.innerText = groupSnap.get("name");
+
   /* Going to build an array to hold a list of every
    * tag present in the group for autocomplete suggestions */
   let currentTags = [];
@@ -142,6 +156,13 @@ function setDate(date) {
       }
     })
     .join(" ");
+}
+
+/* Changes the current date by the specified number of milliseconds, then 
+   calls setDate with the new value of the current date. */
+function shiftDate(ms) {
+  curDate.setMilliseconds(curDate.getMilliseconds() + ms);
+  setDate(curDate);
 }
 
 /* Don't worry about this too much. Just a helper method for

@@ -34,13 +34,17 @@
         <h1 id="group-name">Group Name</h1>
       </div>
       <p class="fs-3 header text-center">
-        <span class="material-icons-outlined fs-1 icon-align">
-          arrow_left
-        </span>
+        <button id="lower-date" class="btn btn-icon">
+          <span class="material-icons-outlined fs-1 icon-align">
+            arrow_left
+          </span>
+        </button>
         <span id="cur-date">Date</span>
-        <span class="material-icons-outlined fs-1 icon-align">
-          arrow_right
-        </span>
+        <button id="raise-date" class="btn btn-icon">
+          <span class="material-icons-outlined fs-1 icon-align">
+            arrow_right
+          </span>
+        </button>
       </p>
       <div class="container d-flex justify-content-end w-75">
         <a class="btn btn-primary rounded-pill" href="#">
@@ -55,9 +59,9 @@
     </div>
 
     <div class="container text-center mt-5">
-      <a class="btn btn-icon" id="addTaskButton">
+      <button class="btn btn-icon" id="addTaskButton">
         <span class="material-icons-outlined fs-1 add-icon">add_circle</span>
-      </a>
+      </button>
     </div>
 
     <div class="darkening-screen" hidden></div>
