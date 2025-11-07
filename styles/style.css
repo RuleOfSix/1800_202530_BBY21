@@ -74,11 +74,12 @@ form {
 .btn-icon {
   color: var(--button-color) !important;
   transition: transform 0.3s;
+  transform: scale(1.2);
   border: 0;
 }
 
 .btn-icon:hover {
-  transform: scale(1.2);
+  transform: scale(1.4);
 }
 
 /* CTA */
