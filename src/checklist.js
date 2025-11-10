@@ -41,6 +41,7 @@ const dateFormat = new Intl.DateTimeFormat("en-us", {
 });
 let uid;
 let tagify;
+let userCompletedTasks = [];
 
 /* All the setup code that gets run once when the page loads */
 function renderPage() {
@@ -59,7 +60,17 @@ function renderPage() {
   /* Set up callback to get user's uid when auth info loads */
   onAuthReady((user) => {
     uid = user.uid;
+    setUserCompletedTasks(uid);
   });
+
+  function setUserCompletedTasks(uid) {
+    const userDocRef = doc(db, "users", uid);
+    onSnapshot(userDocRef, (userSanp) => {
+      if (userSanp.exists()) {
+        userCompletedTasks = userSanp.data().tasks;
+      }
+    });
+  }
 
   /* Set up callback to render task list from group doc in
    * database, and re-render when the group doc changes */
@@ -114,10 +125,18 @@ async function renderTasks(groupSnap) {
   /* Array of every taskID in the group */
   const groupTasks = groupSnap.get("taskIDs");
 
+  /* To prevent error when there is no task */
+  if (groupTasks.length == 0) {
+    if (tagify) {
+      tagify.whitelist = [];
+    }
+    return;
+  }
+
   /* Get all tasks in the group */
   const taskQuery = query(
     collection(db, "tasks"),
-    where("__name__", "in", groupTasks),
+    where("__name__", "in", groupTasks)
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
@@ -135,6 +154,13 @@ async function renderTasks(groupSnap) {
        * we can do it this way becaue we made CheckItem a
        * custom HTML element*/
       let taskItem = new CheckItem();
+      taskItem.taskID = taskSnap.id;
+      taskItem.uid = uid;
+
+      const isCompleted = userCompletedTasks.includes(taskSnap.id);
+      taskItem.isCompleted = isCompleted;
+      taskItem.render();
+
       let taskLabel = taskItem.querySelector(".task-name");
       taskLabel.innerText = taskData.name;
 
