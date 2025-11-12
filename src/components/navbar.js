@@ -1,5 +1,6 @@
-import { onAuthReady } from "/src/authentication.js";
+import { onAuthReady,logoutUser } from "/src/authentication.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 
 class Navbar extends HTMLElement {
   constructor() {
@@ -15,22 +16,23 @@ class Navbar extends HTMLElement {
         this.isLoggedIn = false;
       }
       this.render();
+      this.updateFirstItem();
     });
   }
 
   // Generate the profile item HTML only if the user is logged in.
   buildProfileHTML() {
     if (this.isLoggedIn) {
-      return ` <li class="nav-item d-flex flex-row justify-content-center">
-              <a
+      return ` <li class="nav-item d-flex flex-row justify-content-end">
+              <a id="logout"
                 class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
-                href="/wip.html"
+                href="/index.html"
               >
-                <span class="material-icons-outlined icon-align fs-1">account_circle</span>&nbsp;Profile
+                <span class="material-icons-outlined icon-align fs-1">logout</span>&nbsp;Logout
               </a>
             </li>`;
     } else {
-      return "";
+      return " <li> </li>";
     }
   }
 
@@ -42,16 +44,7 @@ class Navbar extends HTMLElement {
           <ul
             class="navbar-nav container-fluid px-2 m-0 d-flex flex-row align-items-center justify-content-between"
           >
-            <li class="nav-item d=flex flex-row justify-content-start" id="firstNavbarItem">
-              <a
-                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
-                href="#"
-              >
-                <!--determined by js-->
-              </a>
-            </li>
-           ${profileItemHTML}
-            <li class="nav-item d-flex flex-row justify-content-end">
+            <li class="nav-item d-flex flex-row justify-content-start">
               <a
                 class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
                 href="#"
@@ -59,14 +52,29 @@ class Navbar extends HTMLElement {
                 <span class="material-icons-outlined icon-align fs-1">notifications</span>&nbsp;Notifications
               </a>
             </li>
+            <li class="nav-item d-flex flex-row justify-content-center" id="firstNavbarItem">
+              <a
+                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
+                href="#"
+              >
+                <!--determined by js-->
+              </a>
+            </li>
+           
+            
+            ${profileItemHTML}
           </ul>
         </div>
       </nav>
         `;
+    if( this.isLoggedIn){
+      this.querySelector("#logout").addEventListener("click", logoutUser);
+    }
   }
 
   updateFirstItem() {
     const curPage = window.location.pathname;
+
     const firstItem = this.querySelector("#firstNavbarItem").firstElementChild;
     if (curPage === "/checklist.html") {
       firstItem.innerHTML = `
@@ -84,5 +92,6 @@ class Navbar extends HTMLElement {
     }
   }
 }
+
 
 customElements.define("navbar-component", Navbar);
