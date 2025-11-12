@@ -7,12 +7,6 @@ export async function getUserGroupData(userDocSnap) {
   let groupDetails = [];
   if (userDocSnap.exists()) {
     const userData = userDocSnap.data();
-    /*
-      Each array entry is an object that looks like this:
-      { groupName: "name as string",
-        groupID: "id as string"
-      }
-    */
 
     if (userData.groupIDs && userData.groupIDs.length > 0) {
       for (let groupID of userData.groupIDs) {
