@@ -142,6 +142,8 @@ async function renderTasks(groupSnap) {
 
   /* Clear checklist before re-rendering */
   checklist.innerHTML = "";
+  let incompleteTasks = [];
+  let completeTasks = [];
 
   /* Iterate over every task in the group */
   taskQuerySnap.forEach((taskSnap) => {
@@ -165,7 +167,12 @@ async function renderTasks(groupSnap) {
       taskLabel.innerText = taskData.name;
 
       /* Add the new checklist item to the checklist */
-      checklist.appendChild(taskItem);
+      // checklist.appendChild(taskItem);
+      if (isCompleted) {
+        completeTasks.push(taskItem);
+      } else {
+        incompleteTasks.push(taskItem);
+      }
     }
 
     /* This loop builds the deduplicated list of every tag
@@ -175,6 +182,14 @@ async function renderTasks(groupSnap) {
         currentTags.push(tag);
       }
     }
+  });
+
+  incompleteTasks.forEach((taskItem) => {
+    checklist.appendChild(taskItem);
+  });
+
+  completeTasks.forEach((taskItem) => {
+    checklist.appendChild(taskItem);
   });
 
   /* The attribute name is confusing, but this sets the autocomplete
