@@ -136,7 +136,7 @@ async function renderTasks(groupSnap) {
   /* Get all tasks in the group */
   const taskQuery = query(
     collection(db, "tasks"),
-    where("__name__", "in", groupTasks)
+    where("__name__", "in", groupTasks),
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
@@ -240,16 +240,23 @@ function tagValueEquals(tag1) {
 function sameWeekAs(date) {
   const day = date.getDay();
   const lowBound = new Date(date.valueOf() - day * oneDay);
-  lowBound.setHours(0);
-  lowBound.setMinutes(0);
-  lowBound.setSeconds(0);
-  lowBound.setMilliseconds(0);
+  lowBound.setUTCHours(0);
+  lowBound.setUTCMinutes(0);
+  lowBound.setUTCSeconds(0);
+  lowBound.setUTCMilliseconds(0);
   const highBound = new Date(date.valueOf() + (6 - day) * oneDay);
-  highBound.setHours(23);
-  highBound.setMinutes(59);
-  highBound.setSeconds(59);
-  highBound.setMilliseconds(999);
+  highBound.setUTCHours(0);
+  highBound.setUTCMinutes(0);
+  highBound.setUTCSeconds(0);
+  highBound.setUTCMilliseconds(0);
   return (task) => {
+    /*  
+    // In case of future due date debugging:
+    console.log("Task: " + task.name);
+    console.log("\tDue date: " + new Date(task.date.toMillis()));
+    console.log("\tLow Bound: " + lowBound);
+    console.log("\tHigh Bound: " + highBound);
+    */
     const taskTime = task.date.toMillis();
     return taskTime >= lowBound.valueOf() && taskTime <= highBound.valueOf();
   };
