@@ -87,7 +87,7 @@ export function renderGroupSelection(groupDetails) {
         <div class="p-2 mb-4 bg-light rounded-4 m-5">
         <div class="container-fluid py-5 d-flex flex-column align-items-center">
           <h1 class="display-5 fw-bold text-center">
-           <a href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
+           <a id="group-link" groupID="${group.groupID}" href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
            ${group.name}
           </h1>
         </div>
