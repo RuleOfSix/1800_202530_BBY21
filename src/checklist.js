@@ -200,8 +200,12 @@ async function renderTasks(groupSnap) {
 
 /* Sets the date at the top of the page to the date represented by the given Date object */
 function setDate(date) {
+  dateHeader.innerText = formatDate(date);
+}
+
+function formatDate(date) {
   const dateParts = dateFormat.formatToParts(date);
-  dateHeader.innerText = dateParts
+  return dateParts
     .map(({ type, value }) => {
       if (type === "weekday") {
         return value + ",";
