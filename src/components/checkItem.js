@@ -1,14 +1,22 @@
 import { db } from "/src/firebaseConfig.js";
-import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import {
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  getDoc,
+} from "firebase/firestore";
 
 export class CheckItem extends HTMLElement {
-  constructor() {
+  constructor(uid, taskID, taskData, isCompleted, reRenderChecklist) {
     super();
-
-    this.uid = null;
-    this.taskID = null;
-    this.isCompleted = false;
+    this.uid = uid;
+    this.taskID = taskID;
+    this.taskData = taskData;
+    this.isCompleted = isCompleted;
+    this.reRenderChecklist = reRenderChecklist;
     this.addEventListener("click", this.toggleCheck);
+    this.render();
   }
 
   render() {
@@ -20,7 +28,7 @@ export class CheckItem extends HTMLElement {
       "p-3",
       "d-flex",
       "align-items-center",
-      "checklist-item"
+      "checklist-item",
     );
 
     let iconText = "";
@@ -40,7 +48,7 @@ export class CheckItem extends HTMLElement {
         </span>
          <span class="task-name"></span>`;
   }
-  toggleCheck() {
+  async toggleCheck() {
     const icon = this.querySelector(".material-icons-outlined");
     if (this.classList.contains("checked")) {
       this.classList.remove("checked");
@@ -51,6 +59,8 @@ export class CheckItem extends HTMLElement {
       icon.innerText = "check_box";
       this.addCompletedTask();
     }
+    const groupDoc = doc(db, "groups", this.taskData.groupID);
+    this.reRenderChecklist(await getDoc(groupDoc));
   }
 
   async addCompletedTask() {

@@ -63,21 +63,9 @@ function renderPage() {
     setUserCompletedTasks(uid);
   });
 
-  function setUserCompletedTasks(uid) {
-    const userDocRef = doc(db, "users", uid);
-    onSnapshot(userDocRef, (userSanp) => {
-      if (userSanp.exists()) {
-        userCompletedTasks = userSanp.data().tasks;
-      }
-    });
-  }
-
   /* Set up callback to render task list from group doc in
    * database, and re-render when the group doc changes */
   onSnapshot(groupDoc, renderTasks);
-
-  /* Set date at top of page to today's date */
-  setDate(curDate);
 
   /* Add click event listeners to the buttons that shift the date */
   lowerDateButton.addEventListener("click", () => {
@@ -85,6 +73,15 @@ function renderPage() {
   });
   raiseDateButton.addEventListener("click", () => {
     shiftDate(oneWeek);
+  });
+}
+
+function setUserCompletedTasks(uid) {
+  const userDocRef = doc(db, "users", uid);
+  onSnapshot(userDocRef, (userSanp) => {
+    if (userSanp.exists()) {
+      userCompletedTasks = userSanp.data().tasks;
+    }
   });
 }
 
@@ -155,20 +152,20 @@ async function renderTasks(groupSnap) {
       /* Make a new checklist item with the task's name;
        * we can do it this way becaue we made CheckItem a
        * custom HTML element*/
-      let taskItem = new CheckItem();
-      taskItem.taskID = taskSnap.id;
-      taskItem.uid = uid;
-
-      const isCompleted = userCompletedTasks.includes(taskSnap.id);
-      taskItem.isCompleted = isCompleted;
-      taskItem.render();
+      let taskItem = new CheckItem(
+        uid,
+        taskSnap.id,
+        taskData,
+        userCompletedTasks.includes(taskSnap.id),
+        renderTasks,
+      );
 
       let taskLabel = taskItem.querySelector(".task-name");
       taskLabel.innerText = taskData.name;
 
       /* Add the new checklist item to the checklist */
       // checklist.appendChild(taskItem);
-      if (isCompleted) {
+      if (taskItem.isCompleted) {
         completeTasks.push(taskItem);
       } else {
         incompleteTasks.push(taskItem);
@@ -191,6 +188,9 @@ async function renderTasks(groupSnap) {
   completeTasks.forEach((taskItem) => {
     checklist.appendChild(taskItem);
   });
+
+  /* Set date at top of page to today's date */
+  setDate(curDate);
 
   /* The attribute name is confusing, but this sets the autocomplete
    * suggestion list for the tag input to the list of the tags
