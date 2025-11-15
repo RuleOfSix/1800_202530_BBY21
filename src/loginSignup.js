@@ -24,7 +24,9 @@ function initAuthUI() {
   const toLoginBtn = document.getElementById("toLogin");
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
-  const redirectUrl = "main.html";
+  const url = new URL(window.location.href);
+  const groupID = url.searchParams.get("groupID");
+  const redirectUrl = groupID ? `main.html?groupID=${groupID}` : "main.html";
 
   // --- Helper Functions ---
   // Toggle element visibility

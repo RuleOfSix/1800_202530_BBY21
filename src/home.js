@@ -57,7 +57,22 @@ closeButton.addEventListener("click", function (event) {
   groupErrorBlock.hidden = true;
 });
 
-onAuthReady((user) => {
+onAuthReady(async (user) => {
+  /* Immediately handle groupID query parameter (for joining a group) if it exists */
+  const url = new URL(window.location.href);
+  const groupID = url.searchParams.get("groupID");
+  if (groupID && !user) {
+    location.href = `login.html?groupID=${groupID}`;
+    return;
+  }
+  if (groupID) {
+    const userDoc = doc(db, "users", user.uid);
+    const groupDoc = doc(db, "groups", groupID);
+    await updateDoc(userDoc, { groupIDs: arrayUnion(groupID) });
+    await updateDoc(groupDoc, { userIDs: arrayUnion(user.uid) });
+    location.href = `checklist.html?groupID=${groupID}`;
+    return;
+  }
   if (!user) {
     location.href = "index.html";
     return;
