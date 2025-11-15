@@ -13,6 +13,7 @@ import { getUserGroupData } from "/src/group.js";
 
 const addGroupButton = document.getElementById("addGroupButton");
 const groupCreationMenu = document.getElementById("groupCreationMenu");
+const groupShareMenu = document.getElementById("groupShareMenu");
 const darkeningScreen = document.querySelector(".darkening-screen");
 const groupForm = groupCreationMenu.querySelector("#groupForm");
 const nameInput = groupCreationMenu.querySelector("#groupName");
@@ -56,7 +57,22 @@ closeButton.addEventListener("click", function (event) {
   groupErrorBlock.hidden = true;
 });
 
-onAuthReady((user) => {
+onAuthReady(async (user) => {
+  /* Immediately handle groupID query parameter (for joining a group) if it exists */
+  const url = new URL(window.location.href);
+  const groupID = url.searchParams.get("groupID");
+  if (groupID && !user) {
+    location.href = `login.html?groupID=${groupID}`;
+    return;
+  }
+  if (groupID) {
+    const userDoc = doc(db, "users", user.uid);
+    const groupDoc = doc(db, "groups", groupID);
+    await updateDoc(userDoc, { groupIDs: arrayUnion(groupID) });
+    await updateDoc(groupDoc, { userIDs: arrayUnion(user.uid) });
+    location.href = `checklist.html?groupID=${groupID}`;
+    return;
+  }
   if (!user) {
     location.href = "index.html";
     return;
@@ -97,5 +113,10 @@ export function renderGroupSelection(groupDetails) {
 
 function toggleGroupCreationMenu() {
   groupCreationMenu.hidden = !groupCreationMenu?.hidden;
+  darkeningScreen.hidden = !darkeningScreen?.hidden;
+}
+
+function toggleGroupShareMenu() {
+  groupShareMenu.hidden = !groupShareMenu?.hidden;
   darkeningScreen.hidden = !darkeningScreen?.hidden;
 }

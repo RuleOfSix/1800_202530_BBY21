@@ -1,6 +1,5 @@
-import { onAuthReady,logoutUser } from "/src/authentication.js";
+import { onAuthReady, logoutUser } from "/src/authentication.js";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 
 class Navbar extends HTMLElement {
   constructor() {
@@ -67,7 +66,7 @@ class Navbar extends HTMLElement {
         </div>
       </nav>
         `;
-    if( this.isLoggedIn){
+    if (this.isLoggedIn) {
       this.querySelector("#logout").addEventListener("click", logoutUser);
     }
   }
@@ -92,6 +91,5 @@ class Navbar extends HTMLElement {
     }
   }
 }
-
 
 customElements.define("navbar-component", Navbar);
