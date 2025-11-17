@@ -105,7 +105,11 @@ export function renderGroupSelection(groupDetails) {
           <h1 class="display-5 fw-bold text-center">
            <a id="group-link" groupID="${group.groupID}" href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
            ${group.name}
+           
           </h1>
+         <span class="material-icons-outlined float-end fs-1 icon-align btn-icon">
+            more_vert
+          </span>
         </div>
       </div>`;
   });
