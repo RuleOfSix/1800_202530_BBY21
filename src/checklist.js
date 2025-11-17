@@ -133,7 +133,7 @@ async function renderTasks(groupSnap) {
   /* Get all tasks in the group */
   const taskQuery = query(
     collection(db, "tasks"),
-    where("__name__", "in", groupTasks),
+    where("__name__", "in", groupTasks)
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
@@ -152,12 +152,14 @@ async function renderTasks(groupSnap) {
       /* Make a new checklist item with the task's name;
        * we can do it this way becaue we made CheckItem a
        * custom HTML element*/
+
       let taskItem = new CheckItem(
         uid,
         taskSnap.id,
         taskData,
+        formatDate(taskData.date.toDate()),
         userCompletedTasks.includes(taskSnap.id),
-        renderTasks,
+        renderTasks
       );
 
       let taskLabel = taskItem.querySelector(".task-name");

@@ -8,11 +8,12 @@ import {
 } from "firebase/firestore";
 
 export class CheckItem extends HTMLElement {
-  constructor(uid, taskID, taskData, isCompleted, reRenderChecklist) {
+  constructor(uid, taskID, taskData, taskDate, isCompleted, reRenderChecklist) {
     super();
     this.uid = uid;
     this.taskID = taskID;
     this.taskData = taskData;
+    this.taskDate = taskDate;
     this.isCompleted = isCompleted;
     this.reRenderChecklist = reRenderChecklist;
     this.addEventListener("click", this.toggleCheck);
@@ -28,7 +29,7 @@ export class CheckItem extends HTMLElement {
       "p-3",
       "d-flex",
       "align-items-center",
-      "checklist-item",
+      "checklist-item"
     );
 
     let iconText = "";
@@ -41,12 +42,20 @@ export class CheckItem extends HTMLElement {
     }
 
     this.innerHTML = `
-        <span
-          class="material-icons-outlined icon-align align-self-end fs-1 me-2"
-        >
-          ${iconText}
-        </span>
-         <span class="task-name"></span>`;
+        <div class="d-flex flex-column">
+          <div class="d-flex align-items-center">
+            <span
+              class="material-icons-outlined icon-align align-self-end fs-1 me-2">
+                ${iconText}
+            </span>
+            <span class="task-name"></span>
+          </div>
+        
+          <div class="d-flex mt-2 ms-4 ps-4">
+            <span>${this.taskDate}</span>
+          </div> 
+        </div>
+        `;
   }
   async toggleCheck() {
     const icon = this.querySelector(".material-icons-outlined");
