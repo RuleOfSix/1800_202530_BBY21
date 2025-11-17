@@ -18,7 +18,6 @@ export class CheckItem extends HTMLElement {
     this.reRenderChecklist = reRenderChecklist;
     this.addEventListener("click", this.toggleCheck);
     this.render();
-    console.log(this.taskDate);
   }
 
   render() {
