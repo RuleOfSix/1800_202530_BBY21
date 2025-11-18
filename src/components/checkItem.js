@@ -5,6 +5,7 @@ import {
   arrayUnion,
   arrayRemove,
   getDoc,
+  deleteDoc,
 } from "firebase/firestore";
 
 export class CheckItem extends HTMLElement {
@@ -14,6 +15,7 @@ export class CheckItem extends HTMLElement {
     this.taskID = taskID;
     this.taskData = taskData;
     this.taskDate = taskDate;
+    this.createdBy = taskData.createdBy;
     this.isCompleted = isCompleted;
     this.reRenderChecklist = reRenderChecklist;
     this.addEventListener("click", this.toggleCheck);
@@ -41,22 +43,45 @@ export class CheckItem extends HTMLElement {
       this.classList.remove("checked");
     }
 
+    let deleteIcon = "";
+    /* Person only who created task can delete it. */
+    if (this.createdBy === this.uid) {
+      deleteIcon = ` <span class="material-symbols-outlined delete-icon icon-align align-self-end fs-1 p-1 ms-auto">
+                        delete
+                      </span>`;
+    }
+
     this.innerHTML = `
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column w-100">
           <div class="d-flex align-items-center">
             <span
               class="material-icons-outlined icon-align align-self-end fs-1 me-2">
                 ${iconText}
             </span>
-            <span class="task-name"></span>
+            <span class="task-name fs-3"></span>
+            ${deleteIcon}
           </div>
-        
           <div class="d-flex mt-2 ms-4 ps-4">
-            <span>${this.taskDate}</span>
+            <span class="fs-4">${this.taskDate}</span>
           </div> 
         </div>
         `;
+
+    this.deleteIconClick();
   }
+
+  deleteIconClick() {
+    const deleteIcon = this.querySelector(".delete-icon");
+    if (deleteIcon) {
+      deleteIcon.addEventListener("click", () => {
+        /* change it to modal instead. */
+        if (confirm("Do you want to delete this task?")) {
+          this.deleteTask();
+        }
+      });
+    }
+  }
+
   async toggleCheck() {
     const icon = this.querySelector(".material-icons-outlined");
     if (this.classList.contains("checked")) {
@@ -68,6 +93,7 @@ export class CheckItem extends HTMLElement {
       icon.innerText = "check_box";
       this.addCompletedTask();
     }
+
     const groupDoc = doc(db, "groups", this.taskData.groupID);
     this.reRenderChecklist(await getDoc(groupDoc));
   }
@@ -84,6 +110,17 @@ export class CheckItem extends HTMLElement {
     await updateDoc(userDocRef, {
       tasks: arrayRemove(this.taskID),
     });
+  }
+
+  async deleteTask() {
+    const groupDocRef = doc(db, "groups", this.taskData.groupID);
+    const taskDocRef = doc(db, "tasks", this.taskID);
+
+    await updateDoc(groupDocRef, {
+      taskIDs: arrayRemove(this.taskID),
+    });
+
+    await deleteDoc(taskDocRef);
   }
 }
 customElements.define("check-item", CheckItem);
