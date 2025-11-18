@@ -97,6 +97,7 @@ function createTask() {
   const taskDoc = doc(collection(db, "tasks"));
 
   setDoc(taskDoc, {
+    createdBy: uid,
     date: Timestamp.fromMillis(dateInput.valueAsNumber),
     groupID: groupID,
     name: taskName,
