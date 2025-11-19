@@ -30,7 +30,7 @@ class Footer extends HTMLElement {
             </li>
             <li class="nav-item d-flex flex-row justify-content-end">
               <a
-                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
+                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row d-none"
                 href="wip.html"
               >
                 <span class="material-icons-outlined icon-align fs-1">settings</span>&nbsp;Settings
