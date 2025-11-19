@@ -44,9 +44,9 @@ export class CheckItem extends HTMLElement {
     }
 
     let deleteIcon = "";
-    /* Person only who created task can delete it. */
+    /* The person only who created the task can delete it. */
     if (this.createdBy === this.uid) {
-      deleteIcon = ` <span class="material-symbols-outlined delete-icon icon-align align-self-end fs-1 p-1 ms-auto">
+      deleteIcon = ` <span class="material-symbols-outlined delete-icon btn-icon icon-align align-self-end fs-1 p-1 ms-auto">
                         delete
                       </span>`;
     }
