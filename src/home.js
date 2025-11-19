@@ -102,14 +102,13 @@ export function renderGroupSelection(groupDetails) {
     groupListContainer.innerHTML += `
         <div class="p-2 mb-4 bg-light rounded-4 m-5">
         <div class="container-fluid py-5 d-flex flex-column align-items-center">
+        <share-button onclick="toggleGroupShareMenu();"></share-button>
           <h1 class="display-5 fw-bold text-center">
            <a id="group-link" groupID="${group.groupID}" href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
            ${group.name}
-           
+           </a>
           </h1>
-         <span class="material-icons-outlined float-end fs-1 icon-align btn-icon">
-            more_vert
-          </span>
+         <leave-button groupID="${group.groupID}" uid="${uid}"></leave-button>
         </div>
       </div>`;
   });
