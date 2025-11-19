@@ -67,6 +67,8 @@ function renderPage() {
     setUserCompletedTasks(uid);
   });
 
+  setDate(curDate);
+
   /* Set up callback to render task list from group doc in
    * database, and re-render when the group doc changes */
   onSnapshot(groupDoc, renderTasks);
