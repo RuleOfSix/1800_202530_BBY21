@@ -14,6 +14,7 @@ import { getUserGroupData } from "/src/group.js";
 const addGroupButton = document.getElementById("addGroupButton");
 const groupCreationMenu = document.getElementById("groupCreationMenu");
 const groupShareMenu = document.getElementById("groupShareMenu");
+const groupLink = document.getElementById("groupLink");
 const darkeningScreen = document.querySelector(".darkening-screen");
 const groupForm = groupCreationMenu.querySelector("#groupForm");
 const nameInput = groupCreationMenu.querySelector("#groupName");
@@ -99,18 +100,22 @@ function renderGroupStatusMsg(userDocSnap) {
 export function renderGroupSelection(groupDetails) {
   groupListContainer.innerHTML = ``;
   groupDetails.forEach((group) => {
-    groupListContainer.innerHTML += `
-        <div class="p-2 mb-4 bg-light rounded-4 m-5">
-        <div class="container-fluid py-5 d-flex flex-column align-items-center">
-        <share-button onclick="toggleGroupShareMenu();"></share-button>
+    const groupEntry = document.createElement("div");
+    groupEntry.classList.add("p-2", "mb-4", "bg-light", "rounded-4", "m-5");
+    groupEntry.innerHTML = `
+        <div class="container-fluid py-5 hstack gap-3 justify-content-between">
+        <share-button></share-button>
           <h1 class="display-5 fw-bold text-center">
-           <a id="group-link" groupID="${group.groupID}" href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
+           <a groupID="${group.groupID}" href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
            ${group.name}
            </a>
           </h1>
          <leave-button groupID="${group.groupID}" uid="${uid}"></leave-button>
-        </div>
-      </div>`;
+        </div>`;
+    groupListContainer.appendChild(groupEntry);
+    groupEntry
+      .querySelector("share-button")
+      .addEventListener("click", toggleGroupShareMenu(group.groupID));
   });
 }
 
@@ -119,7 +124,10 @@ function toggleGroupCreationMenu() {
   darkeningScreen.hidden = !darkeningScreen?.hidden;
 }
 
-function toggleGroupShareMenu() {
-  groupShareMenu.hidden = !groupShareMenu?.hidden;
-  darkeningScreen.hidden = !darkeningScreen?.hidden;
+function toggleGroupShareMenu(groupID) {
+  return () => {
+    groupShareMenu.hidden = !groupShareMenu?.hidden;
+    groupLink.value = `${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ""}/main.html?groupID=${groupID}`;
+    darkeningScreen.hidden = !darkeningScreen?.hidden;
+  };
 }
