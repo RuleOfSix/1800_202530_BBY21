@@ -62,7 +62,7 @@ export class CheckItem extends HTMLElement {
             ${deleteIcon}
           </div>
           <div class="d-flex mt-2 ms-4 ps-4">
-            <span class="fs-4">${this.taskDate}</span>
+            <span class="fs-4">Due ${this.taskDate}</span>
           </div> 
         </div>
         `;
