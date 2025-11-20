@@ -148,6 +148,8 @@ async function renderTasks(groupSnap) {
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
+  /* Clear checklist before re-rendering */
+  checklist.innerHTML = "";
   let incompleteTasks = [];
   let completeTasks = [];
 
