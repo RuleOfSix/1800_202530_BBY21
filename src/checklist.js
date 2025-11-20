@@ -129,23 +129,25 @@ async function renderTasks(groupSnap) {
   /* Array of every taskID in the group */
   const groupTasks = groupSnap.get("taskIDs");
 
+  /* Clear checklist before re-rendering */
+  checklist.innerHTML = "";
+
   /* To prevent error when there is no task */
   if (groupTasks.length == 0) {
     if (tagify) {
       tagify.whitelist = [];
     }
+
     return;
   }
 
   /* Get all tasks in the group */
   const taskQuery = query(
     collection(db, "tasks"),
-    where("__name__", "in", groupTasks),
+    where("__name__", "in", groupTasks)
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
-  /* Clear checklist before re-rendering */
-  checklist.innerHTML = "";
   let incompleteTasks = [];
   let completeTasks = [];
 
@@ -166,7 +168,7 @@ async function renderTasks(groupSnap) {
         taskData,
         formatDate(taskData.date.toDate()),
         userCompletedTasks.includes(taskSnap.id),
-        renderTasks,
+        renderTasks
       );
 
       let taskLabel = taskItem.querySelector(".task-name");
