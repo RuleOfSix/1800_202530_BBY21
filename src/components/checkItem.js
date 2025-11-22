@@ -18,6 +18,9 @@ export class CheckItem extends HTMLElement {
     this.createdBy = taskData.createdBy;
     this.isCompleted = isCompleted;
     this.reRenderChecklist = reRenderChecklist;
+    this.groupDoc = doc(db, "groups", this.taskData.groupID);
+    this.userDoc = doc(db, "users", this.uid);
+    this.taskDoc = doc(db, "tasks", this.taskID);
     this.addEventListener("click", this.toggleCheck);
     this.render();
   }
@@ -31,7 +34,7 @@ export class CheckItem extends HTMLElement {
       "p-3",
       "d-flex",
       "align-items-center",
-      "checklist-item"
+      "checklist-item",
     );
 
     let iconText = "";
@@ -43,34 +46,28 @@ export class CheckItem extends HTMLElement {
       this.classList.remove("checked");
     }
 
-    let deleteIcon = "";
+    let deleteIconHTML = "";
     /* The person only who created the task can delete it. */
     if (this.createdBy === this.uid) {
-      deleteIcon = ` <span class="material-symbols-outlined delete-icon btn-icon icon-align align-self-end fs-1 p-1 ms-auto">
+      deleteIconHTML = ` <span class="material-symbols-outlined delete-icon btn-icon icon-align fs-1 p-1 ms-auto">
                         delete
                       </span>`;
     }
 
     this.innerHTML = `
-        <div class="d-flex flex-column w-100">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center w-100">
             <span
-              class="material-icons-outlined icon-align align-self-end fs-1 me-2">
+              class="material-icons-outlined check-icon icon-align ms-2 fs-1">
                 ${iconText}
             </span>
-            <span class="task-name fs-3"></span>
-            ${deleteIcon}
+            <div class="d-flex flex-column mt-2 ms-4">
+              <span class="task-name fs-3"></span>
+              <span class="fs-5 opacity-75">Due ${this.taskDate}</span>
+            </div> 
+            ${deleteIconHTML}
           </div>
-          <div class="d-flex mt-2 ms-4 ps-4">
-            <span class="fs-4">Due ${this.taskDate}</span>
-          </div> 
-        </div>
         `;
 
-    this.deleteIconClick();
-  }
-
-  deleteIconClick() {
     const deleteIcon = this.querySelector(".delete-icon");
     if (deleteIcon) {
       deleteIcon.addEventListener("click", () => {
@@ -94,33 +91,27 @@ export class CheckItem extends HTMLElement {
       this.addCompletedTask();
     }
 
-    const groupDoc = doc(db, "groups", this.taskData.groupID);
-    this.reRenderChecklist(await getDoc(groupDoc));
+    this.reRenderChecklist(await getDoc(this.groupDoc));
   }
 
   async addCompletedTask() {
-    const userDocRef = doc(db, "users", this.uid);
-    await updateDoc(userDocRef, {
+    await updateDoc(this.userDoc, {
       tasks: arrayUnion(this.taskID),
     });
   }
 
   async removeCompletedTask() {
-    const userDocRef = doc(db, "users", this.uid);
-    await updateDoc(userDocRef, {
+    await updateDoc(this.userDoc, {
       tasks: arrayRemove(this.taskID),
     });
   }
 
   async deleteTask() {
-    const groupDocRef = doc(db, "groups", this.taskData.groupID);
-    const taskDocRef = doc(db, "tasks", this.taskID);
-
-    await updateDoc(groupDocRef, {
+    await updateDoc(this.groupDoc, {
       taskIDs: arrayRemove(this.taskID),
     });
 
-    await deleteDoc(taskDocRef);
+    await deleteDoc(this.taskDoc);
   }
 }
 customElements.define("check-item", CheckItem);
