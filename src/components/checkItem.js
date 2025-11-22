@@ -63,6 +63,7 @@ export class CheckItem extends HTMLElement {
             <div class="d-flex flex-column mt-2 ms-4">
               <span class="task-name fs-3"></span>
               <span class="fs-5 opacity-75">Due ${this.taskDate}</span>
+              <div class="tag-list hstack gap-1"></div>
             </div> 
             ${deleteIconHTML}
           </div>
@@ -76,6 +77,10 @@ export class CheckItem extends HTMLElement {
           this.deleteTask();
         }
       });
+    }
+    const tagList = this.querySelector(".tag-list");
+    for (const tag of this.taskData.tags) {
+      tagList.appendChild(this.createTagElement(tag));
     }
   }
 
@@ -92,6 +97,45 @@ export class CheckItem extends HTMLElement {
     }
 
     this.reRenderChecklist(await getDoc(this.groupDoc));
+  }
+
+  /* The parameter should be the entire tag object from
+   * the database, NOT just the tag name.
+   */
+  createTagElement(tag) {
+    const element = document.createElement("div");
+    element.classList.add("tag", "rounded-3", "fs-6", "p-1", "text-center");
+    element.style.backgroundColor = this.getTagColor(tag);
+    element.innerText = tag.value;
+    return element;
+  }
+
+  /* Chooses from one of 8 tag colors based on the given tag's name.
+   */
+  getTagColor(tag) {
+    let sel = 0;
+    for (let i = 0; i < tag.value.length; i++) {
+      sel += tag.value.charCodeAt(i);
+    }
+    sel %= 8;
+    switch (sel) {
+      case 0:
+        return "#006400"; // Dark green
+      case 1:
+        return "#922222"; // Maroon
+      case 2:
+        return "#ff9400"; // Orange
+      case 3:
+        return "#b60474"; // Medium violet red
+      case 4:
+        return "#CC00Cc"; // Fuchsia
+      case 5:
+        return "#00ced1"; // Dark Turquoise
+      case 6:
+        return "#2222ff"; // Blue
+      case 7:
+        return "#33cc33"; // Slightly softer blue i guess?
+    }
   }
 
   async addCompletedTask() {
