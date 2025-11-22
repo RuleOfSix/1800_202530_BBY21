@@ -13,6 +13,7 @@ import {
   Timestamp,
   query,
   where,
+  orderBy,
 } from "firebase/firestore";
 
 /* global constants and variables */
@@ -34,9 +35,14 @@ const lowerDateButton = document.getElementById("lower-date");
 const raiseDateButton = document.getElementById("raise-date");
 const oneDay = 1000 * 60 * 60 * 24; /* Exactly one day in milliseconds */
 const oneWeek = oneDay * 7; /* Exactly 7 days in milliseconds */
-const dateFormat = new Intl.DateTimeFormat("en-us", {
+const dueDateFormat = new Intl.DateTimeFormat("en-us", {
   weekday: "long",
   month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});
+const dateHeaderFormat = new Intl.DateTimeFormat("en-us", {
+  month: "short",
   day: "numeric",
   timeZone: "UTC",
 });
@@ -144,7 +150,8 @@ async function renderTasks(groupSnap) {
   /* Get all tasks in the group */
   const taskQuery = query(
     collection(db, "tasks"),
-    where("__name__", "in", groupTasks)
+    where("__name__", "in", groupTasks),
+    orderBy("date", "asc"),
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
@@ -168,9 +175,9 @@ async function renderTasks(groupSnap) {
         uid,
         taskSnap.id,
         taskData,
-        formatDate(taskData.date.toDate()),
+        formatDueDate(taskData.date.toDate()),
         userCompletedTasks.includes(taskSnap.id),
-        renderTasks
+        renderTasks,
       );
 
       let taskLabel = taskItem.querySelector(".task-name");
@@ -211,13 +218,24 @@ async function renderTasks(groupSnap) {
   tagify.whitelist = currentTags;
 }
 
-/* Sets the date at the top of the page to the date represented by the given Date object */
+/* Sets the date header at the top of the page according to the date
+ * represented by the given Date object. Formats the date header as a
+ * range between the first and last days of the week.
+ */
 function setDate(date) {
-  dateHeader.innerText = formatDate(date);
+  const partMap = ({ type, value }) => {
+    if (["month", "day"].includes(type)) {
+      return value;
+    }
+  };
+  const [low, high] = weekBounds(date);
+  const lowStr = dateHeaderFormat.formatToParts(low).map(partMap).join(" ");
+  const highStr = dateHeaderFormat.formatToParts(high).map(partMap).join(" ");
+  dateHeader.innerText = `${lowStr} - ${highStr}`;
 }
 
-function formatDate(date) {
-  const dateParts = dateFormat.formatToParts(date);
+function formatDueDate(date) {
+  const dateParts = dueDateFormat.formatToParts(date);
   return dateParts
     .map(({ type, value }) => {
       if (type === "weekday") {
@@ -255,17 +273,7 @@ function tagValueEquals(tag1) {
  * is in the same week as the given Date.
  */
 function sameWeekAs(date) {
-  const day = date.getDay();
-  const lowBound = new Date(date.valueOf() - day * oneDay);
-  lowBound.setUTCHours(0);
-  lowBound.setUTCMinutes(0);
-  lowBound.setUTCSeconds(0);
-  lowBound.setUTCMilliseconds(0);
-  const highBound = new Date(date.valueOf() + (6 - day) * oneDay);
-  highBound.setUTCHours(0);
-  highBound.setUTCMinutes(0);
-  highBound.setUTCSeconds(0);
-  highBound.setUTCMilliseconds(0);
+  const [lowBound, highBound] = weekBounds(date);
   return (task) => {
     /*  
     // In case of future due date debugging:
@@ -279,5 +287,21 @@ function sameWeekAs(date) {
   };
 }
 
+/* Helper function that returns an array of the first and last
+ * days of the week the given Date is in, as Date objects */
+function weekBounds(date) {
+  const day = date.getDay();
+  const lowBound = new Date(date.valueOf() - day * oneDay);
+  lowBound.setUTCHours(0);
+  lowBound.setUTCMinutes(0);
+  lowBound.setUTCSeconds(0);
+  lowBound.setUTCMilliseconds(0);
+  const highBound = new Date(date.valueOf() + (6 - day) * oneDay);
+  highBound.setUTCHours(0);
+  highBound.setUTCMinutes(0);
+  highBound.setUTCSeconds(0);
+  highBound.setUTCMilliseconds(0);
+  return [lowBound, highBound];
+}
 /* Call the initial page startup logic */
 renderPage();
