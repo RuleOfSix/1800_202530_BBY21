@@ -24,6 +24,9 @@ const closeButton = groupCreationMenu.querySelector("close-button");
 const groupStatusMsg = document.getElementById("groupStatusMsg");
 const groupListContainer = document.getElementById("groupListContainer");
 let uid;
+const copyButton = document.getElementById("copyGroupLinkBtn");
+const copyIcon = document.getElementById("copyIcon");
+const copyLabel = document.getElementById("copyLabel");
 
 addGroupButton.addEventListener("click", toggleGroupCreationMenu);
 
@@ -57,6 +60,35 @@ groupForm.addEventListener("submit", function (event) {
 closeButton.addEventListener("click", function (event) {
   groupErrorBlock.hidden = true;
 });
+
+// copy the groupShareLink (url) and change the button status
+copyButton.addEventListener("click", async () => {
+  const url = groupLink.value;
+  await navigator.clipboard.writeText(url);
+
+  setCopySuccess();
+  setTimeout(() => {
+    resetCopyButton();
+  }, 1500);
+});
+
+// Change button style to indicate successfully copied
+function setCopySuccess() {
+  copyButton.classList.remove("btn-primary");
+  copyButton.classList.add("btn-secondary", "fw-bold");
+
+  copyIcon.innerText = "check";
+  copyLabel.innerText = "Copied!";
+}
+
+// Reset button style to default
+function resetCopyButton() {
+  copyButton.classList.remove("btn-secondary", "fw-bold");
+  copyButton.classList.add("btn-primary");
+
+  copyIcon.innerText = "content_copy";
+  copyLabel.innerText = "Copy";
+}
 
 onAuthReady(async (user) => {
   /* Immediately handle groupID query parameter (for joining a group) if it exists */
@@ -127,7 +159,9 @@ function toggleGroupCreationMenu() {
 function toggleGroupShareMenu(groupID) {
   return () => {
     groupShareMenu.hidden = !groupShareMenu?.hidden;
-    groupLink.value = `${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ""}/main.html?groupID=${groupID}`;
+    groupLink.value = `${location.protocol}//${location.hostname}${
+      location.port ? `:${location.port}` : ""
+    }/main.html?groupID=${groupID}`;
     darkeningScreen.hidden = !darkeningScreen?.hidden;
   };
 }
