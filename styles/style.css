@@ -4,6 +4,7 @@
   --text-color: #f3effb;
   --nav-color: #443b54;
   --card-color: #443b54;
+  --info-color: #484d55;
 
   --button-color: #99f8ba;
   --button-text-color: #03260f;
@@ -96,6 +97,11 @@ form {
 
 .cta-container .btn-primary:hover {
   transform: translateY(-4px);
+}
+
+/* Group */
+#groupStatusContainer {
+  background-color: var(--info-color) !important;
 }
 
 /* Calendar */
