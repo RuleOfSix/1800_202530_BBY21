@@ -8,8 +8,17 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 
+/* A custom HTML element representing a single task item in the checklist */
 export class CheckItem extends HTMLElement {
-  constructor(uid, taskID, taskData, taskDate, isCompleted, reRenderChecklist) {
+  constructor(
+    uid,
+    taskID,
+    taskData,
+    taskDate,
+    isCompleted,
+    openDeleteModal,
+    reRenderChecklist
+  ) {
     super();
     this.uid = uid;
     this.taskID = taskID;
@@ -17,7 +26,8 @@ export class CheckItem extends HTMLElement {
     this.taskDate = taskDate;
     this.createdBy = taskData.createdBy;
     this.isCompleted = isCompleted;
-    this.reRenderChecklist = reRenderChecklist;
+    this.openDeleteModal = openDeleteModal;
+    this.isDeleted = this.reRenderChecklist = reRenderChecklist;
     this.groupDoc = doc(db, "groups", this.taskData.groupID);
     this.userDoc = doc(db, "users", this.uid);
     this.taskDoc = doc(db, "tasks", this.taskID);
@@ -34,9 +44,10 @@ export class CheckItem extends HTMLElement {
       "p-3",
       "d-flex",
       "align-items-center",
-      "checklist-item",
+      "checklist-item"
     );
 
+    /* Determine the initial icon state based on completion status */
     let iconText = "";
     if (this.isCompleted) {
       iconText = "check_box";
@@ -46,8 +57,8 @@ export class CheckItem extends HTMLElement {
       this.classList.remove("checked");
     }
 
+    /* Only the person who created the task can see the delete button */
     let deleteIconHTML = "";
-    /* The person only who created the task can delete it. */
     if (this.createdBy === this.uid) {
       deleteIconHTML = ` <span class="material-symbols-outlined delete-icon btn-icon icon-align fs-1 p-1 ms-auto">
                         delete
@@ -72,10 +83,8 @@ export class CheckItem extends HTMLElement {
     const deleteIcon = this.querySelector(".delete-icon");
     if (deleteIcon) {
       deleteIcon.addEventListener("click", () => {
-        /* change it to modal instead. */
-        if (confirm("Do you want to delete this task?")) {
-          this.deleteTask();
-        }
+        /* Trigger the callback to open the delete modal in checklist.js */
+        this.openDeleteModal(this);
       });
     }
     const tagList = this.querySelector(".tag-list");
@@ -84,7 +93,12 @@ export class CheckItem extends HTMLElement {
     }
   }
 
-  async toggleCheck() {
+  async toggleCheck(event) {
+    /* Check if the clicked the element is the delete icon
+     * If so, exit immediately to prevent toggling the check status during delation */
+    if (event.target.closest(".delete-icon")) {
+      return;
+    }
     const icon = this.querySelector(".material-icons-outlined");
     if (this.classList.contains("checked")) {
       this.classList.remove("checked");
@@ -138,18 +152,22 @@ export class CheckItem extends HTMLElement {
     }
   }
 
+  /* Adds the task ID to the user's completed tasks array in Firestore */
   async addCompletedTask() {
     await updateDoc(this.userDoc, {
       tasks: arrayUnion(this.taskID),
     });
   }
 
+  /* Removes the task ID from ther user's completed tasks array in Firestore
+   * Used when unchecking a task */
   async removeCompletedTask() {
     await updateDoc(this.userDoc, {
       tasks: arrayRemove(this.taskID),
     });
   }
 
+  /* Deletes the task from the group's list and removes the task document */
   async deleteTask() {
     await updateDoc(this.groupDoc, {
       taskIDs: arrayRemove(this.taskID),

@@ -61,7 +61,7 @@ closeButton.addEventListener("click", function (event) {
   groupErrorBlock.hidden = true;
 });
 
-// copy the groupShareLink (url) and change the button status
+// Copy the link to the clipboard and update the button status
 copyButton.addEventListener("click", async () => {
   const url = groupLink.value;
   await navigator.clipboard.writeText(url);
@@ -72,7 +72,7 @@ copyButton.addEventListener("click", async () => {
   }, 1500);
 });
 
-// Change button style to indicate successfully copied
+// Update button style to indicate success
 function setCopySuccess() {
   copyButton.classList.remove("btn-primary");
   copyButton.classList.add("btn-secondary", "fw-bold");
@@ -94,10 +94,14 @@ onAuthReady(async (user) => {
   /* Immediately handle groupID query parameter (for joining a group) if it exists */
   const url = new URL(window.location.href);
   const groupID = url.searchParams.get("groupID");
+
   if (groupID && !user) {
     location.href = `login.html?groupID=${groupID}`;
     return;
   }
+
+  /* If logged in with a group ID, add the user to the group and
+   * redirect to the checklist */
   if (groupID) {
     const userDoc = doc(db, "users", user.uid);
     const groupDoc = doc(db, "groups", groupID);
@@ -116,6 +120,7 @@ onAuthReady(async (user) => {
   onSnapshot(doc(db, "users", uid), renderGroupStatusMsg);
 });
 
+/* Update the status message based on whether the user has joined any groups */
 function renderGroupStatusMsg(userDocSnap) {
   if (userDocSnap.exists()) {
     const userData = userDocSnap.data();
@@ -129,11 +134,14 @@ function renderGroupStatusMsg(userDocSnap) {
   }
 }
 
+/* Render the list of groups the user belongs to as cards */
 export function renderGroupSelection(groupDetails) {
   groupListContainer.innerHTML = ``;
   groupDetails.forEach((group) => {
     const groupEntry = document.createElement("div");
     groupEntry.classList.add("p-2", "mb-4", "bg-light", "rounded-4", "m-5");
+
+    /* Construct the HTML for the group card */
     groupEntry.innerHTML = `
         <div class="container-fluid py-5 hstack gap-3 justify-content-between">
         <share-button></share-button>

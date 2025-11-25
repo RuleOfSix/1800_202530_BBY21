@@ -19,11 +19,14 @@ import {
 /* global constants and variables */
 const addTaskButton = document.getElementById("addTaskButton");
 const taskCreationMenu = document.getElementById("taskCreationMenu");
+const taskDeletionMenu = document.getElementById("taskDeletionMenu");
 const darkeningScreen = document.querySelector(".darkening-screen");
 const nameInput = taskCreationMenu.querySelector("#taskName");
 const dateInput = taskCreationMenu.querySelector("#taskDate");
 const tagsInput = taskCreationMenu.querySelector("#taskTags");
 const submitButton = taskCreationMenu.querySelector("#submitTask");
+const cancelDeleteButton = taskDeletionMenu.querySelector("#cancelDelete");
+const confirmDeleteButton = taskDeletionMenu.querySelector("#deleteTask");
 const url = new URL(window.location.href);
 const groupID = url.searchParams.get("groupID");
 const groupDoc = doc(db, "groups", groupID);
@@ -49,6 +52,7 @@ const dateHeaderFormat = new Intl.DateTimeFormat("en-us", {
 let uid;
 let tagify;
 let userCompletedTasks = [];
+let taskItemToDelete = null;
 
 /* All the setup code that gets run once when the page loads */
 function renderPage() {
@@ -63,6 +67,10 @@ function renderPage() {
   /* Add click event listeners for buttons using the functions below */
   addTaskButton.addEventListener("click", toggleTaskCreationMenu);
   submitButton.addEventListener("click", createTask);
+
+  /* Add click event listeners for task deletion modal */
+  cancelDeleteButton.addEventListener("click", toggleTaskDeletionMenu);
+  confirmDeleteButton.addEventListener("click", confirmDeleteTask);
 
   /* Set up callback to get user's uid when auth info loads */
   onAuthReady((user) => {
@@ -88,11 +96,12 @@ function renderPage() {
   });
 }
 
+/* Gets completed tasks from users document and keeps the array updated */
 function setUserCompletedTasks(uid) {
   const userDocRef = doc(db, "users", uid);
-  onSnapshot(userDocRef, (userSanp) => {
-    if (userSanp.exists()) {
-      userCompletedTasks = userSanp.data().tasks;
+  onSnapshot(userDocRef, (userSnap) => {
+    if (userSnap.exists()) {
+      userCompletedTasks = userSnap.data().tasks;
     }
   });
 }
@@ -101,6 +110,17 @@ function setUserCompletedTasks(uid) {
 function toggleTaskCreationMenu() {
   taskCreationMenu.hidden = !taskCreationMenu?.hidden;
   darkeningScreen.hidden = !darkeningScreen?.hidden;
+}
+
+/* Toggles the task deletion form modal */
+function toggleTaskDeletionMenu() {
+  taskDeletionMenu.hidden = !taskDeletionMenu?.hidden;
+  darkeningScreen.hidden = !darkeningScreen?.hidden;
+
+  /* Clear the target when closing the modal */
+  if (taskDeletionMenu.hidden) {
+    taskItemToDelete = null;
+  }
 }
 
 /* Creates task in database, adds task to group, and closes task creation modal. */
@@ -120,6 +140,20 @@ function createTask() {
     taskIDs: arrayUnion(taskDoc.id),
   });
   toggleTaskCreationMenu();
+}
+
+/* Callback function passed to CheckItem: opens the modal */
+function openDeleteModal(deleteClickedItem) {
+  taskItemToDelete = deleteClickedItem;
+  toggleTaskDeletionMenu();
+}
+
+/* Function executed when 'confirm' is clicked in the modal */
+function confirmDeleteTask() {
+  if (taskItemToDelete) {
+    taskItemToDelete.deleteTask();
+  }
+  toggleTaskDeletionMenu();
 }
 
 /* Renders all tasks in the group, and generates the tagify
@@ -151,7 +185,7 @@ async function renderTasks(groupSnap) {
   const taskQuery = query(
     collection(db, "tasks"),
     where("__name__", "in", groupTasks),
-    orderBy("date", "asc"),
+    orderBy("date", "asc")
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
@@ -177,7 +211,8 @@ async function renderTasks(groupSnap) {
         taskData,
         formatDueDate(taskData.date.toDate()),
         userCompletedTasks.includes(taskSnap.id),
-        renderTasks,
+        openDeleteModal,
+        renderTasks
       );
 
       let taskLabel = taskItem.querySelector(".task-name");
