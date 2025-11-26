@@ -51,12 +51,27 @@
         </button>
       </p>
       <div class="container d-flex justify-content-end w-75 mb-4">
-        <a class="btn btn-primary rounded-pill d-none" href="#">
-          <span class="material-icons-outlined icon-align fs-1"
-            >filter_list</span
+        <div class="d-inline-block vstack gap-3">
+          <a
+            class="btn btn-primary rounded-pill"
+            id="filterButton"
+            href="#filter"
+            role="button"
+            aria-expanded="false"
+            aria-controls="filterMenu"
+            data-bs-toggle="collapse"
           >
-          Filter by...&nbsp;
-        </a>
+            <span class="material-icons-outlined icon-align fs-1"
+              >filter_list</span
+            >
+            Filter by...&nbsp;
+          </a>
+          <div class="collapse" id="filter">
+            <li>Filter option 1</li>
+            <li>Filter option 2</li>
+            <li>Filter option 3</li>
+          </div>
+        </div>
       </div>
 
       <div class="container vstack gap-3" id="checklist-container"></div>

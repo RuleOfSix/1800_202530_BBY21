@@ -20,11 +20,13 @@ import {
 const addTaskButton = document.getElementById("addTaskButton");
 const taskCreationMenu = document.getElementById("taskCreationMenu");
 const taskDeletionMenu = document.getElementById("taskDeletionMenu");
+const filterMenu = document.getElementById("filterMenu");
 const darkeningScreen = document.querySelector(".darkening-screen");
 const nameInput = taskCreationMenu.querySelector("#taskName");
 const dateInput = taskCreationMenu.querySelector("#taskDate");
 const tagsInput = taskCreationMenu.querySelector("#taskTags");
 const submitButton = taskCreationMenu.querySelector("#submitTask");
+const filterButton = document.querySelector("#filterButton");
 const cancelDeleteButton = taskDeletionMenu.querySelector("#cancelDelete");
 const confirmDeleteButton = taskDeletionMenu.querySelector("#deleteTask");
 const url = new URL(window.location.href);
@@ -72,6 +74,9 @@ function renderPage() {
   cancelDeleteButton.addEventListener("click", toggleTaskDeletionMenu);
   confirmDeleteButton.addEventListener("click", confirmDeleteTask);
 
+  /* Add click event listeners for filter button */
+  // filterButton.addEventListener("click", toggleFilterMenu);
+
   /* Set up callback to get user's uid when auth info loads */
   onAuthReady((user) => {
     if (!user) {
@@ -109,6 +114,12 @@ function setUserCompletedTasks(uid) {
 /* Toggles the task creation form modal */
 function toggleTaskCreationMenu() {
   taskCreationMenu.hidden = !taskCreationMenu?.hidden;
+  darkeningScreen.hidden = !darkeningScreen?.hidden;
+}
+
+/* Toggles the filtering modal */
+function toggleFilterMenu() {
+  filterMenu.hidden = !filterMenu?.hidden;
   darkeningScreen.hidden = !darkeningScreen?.hidden;
 }
 
@@ -185,7 +196,7 @@ async function renderTasks(groupSnap) {
   const taskQuery = query(
     collection(db, "tasks"),
     where("__name__", "in", groupTasks),
-    orderBy("date", "asc")
+    orderBy("date", "asc"),
   );
   const taskQuerySnap = await getDocs(taskQuery);
 
@@ -212,7 +223,7 @@ async function renderTasks(groupSnap) {
         formatDueDate(taskData.date.toDate()),
         userCompletedTasks.includes(taskSnap.id),
         openDeleteModal,
-        renderTasks
+        renderTasks,
       );
 
       let taskLabel = taskItem.querySelector(".task-name");
