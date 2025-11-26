@@ -46,7 +46,12 @@ export class CheckItem extends HTMLElement {
       "align-items-center",
       "checklist-item"
     );
-
+    
+    /*check date to mark urgent */
+    let today = new Date(Date.now());
+    if (this.taskData.date.toDate().getUTCDay() === today.getDay())  {
+    this.classList.add("urgent");
+    }
     /* Determine the initial icon state based on completion status */
     let iconText = "";
     if (this.isCompleted) {
