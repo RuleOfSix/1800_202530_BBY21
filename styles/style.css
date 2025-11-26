@@ -121,8 +121,17 @@ form {
   cursor: pointer;
 }
 
+.urgent {
+  
+  background-color: darkred;
+}
+
 .checked {
-  opacity: 65%;
+  opacity: 40%;
+  
+}
+.urgent.checked{
+  background-color: var(--card-color);
 }
 
 /* Navbar & Footer */
@@ -164,6 +173,10 @@ footer-component {
   color: red;
 }
 
+.bigArrow {
+  transform:scale(1.5);
+}
+
 @media screen and (max-width: 991px) {
   /* Size adjustment on certain icons for small screens;
    * if your icon looks too small on mobile try adding it
@@ -179,3 +192,4 @@ footer-component {
     font-size: 10px;
   }
 }
+
