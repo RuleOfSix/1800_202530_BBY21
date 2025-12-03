@@ -261,13 +261,15 @@ async function renderTasks(groupSnap) {
   /* add incomplete tasks, then complete tasks to the checklist */
   const completionFilters = incompleteFilter.checked || completeFilter.checked;
   if (incompleteFilter.checked || !completionFilters) {
-    incompleteTasks.filter(filterUnion(...filters)).forEach((taskItem) => {
-      checklist.appendChild(taskItem);
-    });
+    incompleteTasks
+      .filter(filterIntersection(...filters))
+      .forEach((taskItem) => {
+        checklist.appendChild(taskItem);
+      });
   }
 
   if (completeFilter.checked || !completionFilters) {
-    completeTasks.filter(filterUnion(...filters)).forEach((taskItem) => {
+    completeTasks.filter(filterIntersection(...filters)).forEach((taskItem) => {
       checklist.appendChild(taskItem);
     });
   }
@@ -370,11 +372,11 @@ async function reRender() {
   renderTasks(await getDoc(groupDoc));
 }
 
-function filterUnion(...filters) {
+function filterIntersection(...filters) {
   return (obj) => {
-    let result = filters.length == 0;
-    for (filter of filters) {
-      result ||= filter(obj);
+    let result = true;
+    for (let filter of filters) {
+      result &&= filter(obj);
     }
     return result;
   };
