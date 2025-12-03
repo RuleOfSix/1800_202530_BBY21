@@ -78,6 +78,7 @@ hr {
 
 .btn-icon {
   color: var(--button-color) !important;
+  cursor: pointer;
   transition: transform 0.3s;
   transform: scale(1.2);
   border: 0;
@@ -89,6 +90,17 @@ hr {
 
 .check-icon {
   transform: scale(1.4);
+}
+
+/* Tagify */
+.tagify {
+  padding-top: 0em;
+  padding-bottom: 0em;
+  display: flex !important;
+}
+
+.tagify__tag {
+  vertical-align: middle;
 }
 
 /* CTA */
