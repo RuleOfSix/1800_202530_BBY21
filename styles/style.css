@@ -4,6 +4,7 @@
   --text-color: #f3effb;
   --nav-color: #443b54;
   --card-color: #443b54;
+  --info-color: #484d55;
 
   --button-color: #99f8ba;
   --button-text-color: #03260f;
@@ -102,6 +103,11 @@ hr {
   transform: translateY(-4px);
 }
 
+/* Group */
+#groupStatusContainer {
+  background-color: var(--info-color) !important;
+}
+
 /* Calendar */
 
 #calendar {
@@ -123,8 +129,15 @@ hr {
   cursor: pointer;
 }
 
+.urgent {
+  background-color: darkred;
+}
+
 .checked {
-  opacity: 65%;
+  opacity: 40%;
+}
+.urgent.checked {
+  background-color: var(--card-color);
 }
 
 /* Navbar & Footer */
@@ -174,6 +187,10 @@ footer-component {
   max-height: 20vmax;
   overflow-y: scroll;
   width: fit-content;
+}
+
+.bigArrow {
+  transform: scale(1.5);
 }
 
 @media screen and (max-width: 991px) {
