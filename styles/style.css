@@ -24,6 +24,10 @@ form {
   color: var(--text-color);
 }
 
+hr {
+  border-color: var(--button-color);
+}
+
 .bg-light {
   background-color: var(--card-color) !important;
 }
@@ -110,7 +114,11 @@ form {
   max-width: 1100px;
   margin: 40px 10px;
   padding: 10px 0px;
-  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
+  font-family:
+    Arial,
+    Helvetica Neue,
+    Helvetica,
+    sans-serif;
   font-size: 16px;
 }
 
@@ -122,15 +130,13 @@ form {
 }
 
 .urgent {
-  
   background-color: darkred;
 }
 
 .checked {
   opacity: 40%;
-  
 }
-.urgent.checked{
+.urgent.checked {
   background-color: var(--card-color);
 }
 
@@ -173,8 +179,18 @@ footer-component {
   color: red;
 }
 
+/* Filter menu */
+#filter {
+  background-color: var(--card-color);
+  padding: 0.5em;
+  margin-top: 0.5em;
+  max-height: 20vmax;
+  overflow-y: scroll;
+  width: fit-content;
+}
+
 .bigArrow {
-  transform:scale(1.5);
+  transform: scale(1.5);
 }
 
 @media screen and (max-width: 991px) {
@@ -183,6 +199,7 @@ footer-component {
    * to the selector for this rule */
   navbar-component span.material-icons-outlined,
   footer-component span.material-icons-outlined,
+  .filter-icon,
   .add-icon {
     font-size: calc(2.35rem + 1.5vw) !important;
   }
@@ -192,4 +209,3 @@ footer-component {
     font-size: 10px;
   }
 }
-

@@ -10,6 +10,8 @@
     <script type="module" src="/src/components/footer.js" defer></script>
     <script type="module" src="/src/components/closeButton.js" defer></script>
     <script type="module" src="/src/components/checkItem.js" defer></script>
+    <script type="module" src="/src/components/filterItem.js" defer></script>
+    <script type="module" src="/src/components/tagElement.js" defer></script>
 
     <!-- Google material icons -->
     <link
@@ -51,12 +53,38 @@
         </button>
       </p>
       <div class="container d-flex justify-content-end w-75 mb-4">
-        <a class="btn btn-primary rounded-pill d-none" href="#">
-          <span class="material-icons-outlined icon-align fs-1"
-            >filter_list</span
+        <div class="d-inline-block vstack gap-3">
+          <a
+            class="btn btn-primary rounded-pill"
+            id="filterButton"
+            href="#filter"
+            role="button"
+            aria-expanded="false"
+            aria-controls="filterMenu"
+            data-bs-toggle="collapse"
           >
-          Filter by...&nbsp;
-        </a>
+            <span
+              class="material-icons-outlined icon-align fs-2"
+              id="filter-icon"
+              >filter_list</span
+            >
+            <span class="align-bottom">Filter by...&nbsp;</span>
+          </a>
+          <div class="collapse vstack gap-3 fs-5 rounded-3" id="filter">
+            <div class="vstack gap-3 m-0 p-0" id="completion-filters">
+              <filter-item
+                type="incomplete"
+                label="Incomplete Tasks"
+              ></filter-item>
+              <filter-item
+                type="complete"
+                label="Completed Tasks"
+              ></filter-item>
+              <hr class="m-0 p-0" />
+            </div>
+            <div class="vstack gap-3 m-0 p-0" id="tagFilterList"></div>
+          </div>
+        </div>
       </div>
 
       <div class="container vstack gap-3" id="checklist-container"></div>
