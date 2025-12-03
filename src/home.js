@@ -96,7 +96,7 @@ onAuthReady(async (user) => {
   const groupID = url.searchParams.get("groupID");
 
   if (groupID && !user) {
-    location.href = `login.html?groupID=${groupID}`;
+    location.href = `login?groupID=${groupID}`;
     return;
   }
 
@@ -107,11 +107,11 @@ onAuthReady(async (user) => {
     const groupDoc = doc(db, "groups", groupID);
     await updateDoc(userDoc, { groupIDs: arrayUnion(groupID) });
     await updateDoc(groupDoc, { userIDs: arrayUnion(user.uid) });
-    location.href = `checklist.html?groupID=${groupID}`;
+    location.href = `checklist?groupID=${groupID}`;
     return;
   }
   if (!user) {
-    location.href = "index.html";
+    location.href = "index";
     return;
   }
 
@@ -146,7 +146,7 @@ export function renderGroupSelection(groupDetails) {
         <div class="container-fluid py-5 hstack gap-3 justify-content-between">
         <share-button></share-button>
           <h1 class="display-5 fw-bold text-center">
-           <a groupID="${group.groupID}" href="/checklist.html?groupID=${group.groupID}" class="list-group-item list-group-item-action">
+           <a groupID="${group.groupID}" href="/checklist?groupID=${group.groupID}" class="list-group-item list-group-item-action">
            ${group.name}
            </a>
           </h1>
@@ -169,7 +169,7 @@ function toggleGroupShareMenu(groupID) {
     groupShareMenu.hidden = !groupShareMenu?.hidden;
     groupLink.value = `${location.protocol}//${location.hostname}${
       location.port ? `:${location.port}` : ""
-    }/main.html?groupID=${groupID}`;
+    }/main?groupID=${groupID}`;
     darkeningScreen.hidden = !darkeningScreen?.hidden;
   };
 }

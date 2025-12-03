@@ -38,17 +38,17 @@ export async function signupUser(name, email, password) {
 
 export async function logoutUser() {
   await signOut(auth);
-  window.location.href = "index.html";
+  window.location.href = "index";
 }
 
 export function checkAuthState() {
   onAuthStateChanged(auth, (user) => {
-    if (window.location.pathname.endsWith("main.html")) {
+    if (window.location.pathname.endsWith("main")) {
       if (user) {
         const displayName = user.displayName || user.email;
         $("#welcomeMessage").text(`Hello, ${displayName}!`);
       } else {
-        window.location.href = "index.html";
+        window.location.href = "index";
       }
     }
   });
