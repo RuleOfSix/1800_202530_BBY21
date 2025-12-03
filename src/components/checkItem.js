@@ -47,11 +47,11 @@ export class CheckItem extends HTMLElement {
       "align-items-center",
       "checklist-item",
     );
-    
+
     /*check date to mark urgent */
     let today = new Date(Date.now());
-    if (this.taskData.date.toDate().getUTCDay() === today.getDay())  {
-    this.classList.add("urgent");
+    if (this.taskData.date.toDate().getUTCDay() === today.getDay()) {
+      this.classList.add("urgent");
     }
     /* Determine the initial icon state based on completion status */
     let iconText = "";
@@ -80,7 +80,7 @@ export class CheckItem extends HTMLElement {
             <div class="d-flex flex-column mt-2 ms-4">
               <span class="task-name fs-3"></span>
               <span class="fs-6 opacity-75">Due ${this.taskDate}</span>
-              <div class="tag-list hstack gap-1"></div>
+              <div class="tag-list hstack gap-1 flex-wrap"></div>
             </div> 
             ${deleteIconHTML}
           </div>

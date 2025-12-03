@@ -156,6 +156,9 @@ function createTask() {
   updateDoc(groupDoc, {
     taskIDs: arrayUnion(taskDoc.id),
   });
+  nameInput.value = "";
+  dateInput.value = "";
+  tagsInput.value = "";
   toggleTaskCreationMenu();
 }
 
