@@ -9,7 +9,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 
-import { loginUser, signupUser, authErrorMessage } from "./authentication.js";
+import {
+  loginUser,
+  signupUser,
+  authErrorMessage,
+} from "/src/authentication.js";
 
 // --- Login and Signup Page ---
 // Handles toggling between Login/Signup views and form submits
@@ -26,7 +30,7 @@ function initAuthUI() {
   const signupForm = document.getElementById("signupForm");
   const url = new URL(window.location.href);
   const groupID = url.searchParams.get("groupID");
-  const redirectUrl = groupID ? `main.html?groupID=${groupID}` : "main.html";
+  const redirectUrl = groupID ? `main?groupID=${groupID}` : "main";
 
   // --- Helper Functions ---
   // Toggle element visibility

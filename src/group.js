@@ -1,7 +1,7 @@
 // Fetches the user document from Firebase and returns group data
-import { db } from "./firebaseConfig.js";
+import { db } from "/src/firebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
-import { renderGroupSelection } from "./home.js";
+import { renderGroupSelection } from "/src/home.js";
 
 /* Fetches detailed group information corresponding to the user's group IDs
  * and updates the UI */

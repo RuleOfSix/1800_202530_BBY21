@@ -82,7 +82,7 @@ function renderPage() {
   /* Set up callback to get user's uid when auth info loads */
   onAuthReady((user) => {
     if (!user) {
-      location.href = `index.html`;
+      location.href = `index`;
     }
     uid = user.uid;
     setUserCompletedTasks(uid);
