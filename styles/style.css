@@ -23,6 +23,10 @@ form {
   color: var(--text-color);
 }
 
+hr {
+  border-color: var(--button-color);
+}
+
 .bg-light {
   background-color: var(--card-color) !important;
 }
@@ -162,12 +166,23 @@ footer-component {
   color: red;
 }
 
+/* Filter menu */
+#filter {
+  background-color: var(--card-color);
+  padding: 0.5em;
+  margin-top: 0.5em;
+  max-height: 20vmax;
+  overflow-y: scroll;
+  width: fit-content;
+}
+
 @media screen and (max-width: 991px) {
   /* Size adjustment on certain icons for small screens;
    * if your icon looks too small on mobile try adding it
    * to the selector for this rule */
   navbar-component span.material-icons-outlined,
   footer-component span.material-icons-outlined,
+  .filter-icon,
   .add-icon {
     font-size: calc(2.35rem + 1.5vw) !important;
   }

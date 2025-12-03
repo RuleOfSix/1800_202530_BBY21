@@ -10,6 +10,8 @@
     <script type="module" src="/src/components/footer.js" defer></script>
     <script type="module" src="/src/components/closeButton.js" defer></script>
     <script type="module" src="/src/components/checkItem.js" defer></script>
+    <script type="module" src="/src/components/filterItem.js" defer></script>
+    <script type="module" src="/src/components/tagElement.js" defer></script>
 
     <!-- Google material icons -->
     <link
@@ -61,15 +63,26 @@
             aria-controls="filterMenu"
             data-bs-toggle="collapse"
           >
-            <span class="material-icons-outlined icon-align fs-1"
+            <span
+              class="material-icons-outlined icon-align fs-2"
+              id="filter-icon"
               >filter_list</span
             >
-            Filter by...&nbsp;
+            <span class="align-bottom">Filter by...&nbsp;</span>
           </a>
-          <div class="collapse" id="filter">
-            <li>Filter option 1</li>
-            <li>Filter option 2</li>
-            <li>Filter option 3</li>
+          <div class="collapse vstack gap-3 fs-5 rounded-3" id="filter">
+            <div class="vstack gap-3 m-0 p-0" id="completion-filters">
+              <filter-item
+                type="incomplete"
+                label="Incomplete Tasks"
+              ></filter-item>
+              <filter-item
+                type="complete"
+                label="Completed Tasks"
+              ></filter-item>
+              <hr class="m-0 p-0" />
+            </div>
+            <div class="vstack gap-3 m-0 p-0" id="tagFilterList"></div>
           </div>
         </div>
       </div>

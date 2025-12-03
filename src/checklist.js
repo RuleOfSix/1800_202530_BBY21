@@ -1,6 +1,7 @@
 import { db } from "/src/firebaseConfig.js";
 import { onAuthReady } from "/src/authentication.js";
 import { CheckItem } from "/src/components/checkItem.js";
+import { FilterItem } from "/src/components/filterItem.js";
 import {
   collection,
   doc,
@@ -21,6 +22,9 @@ const addTaskButton = document.getElementById("addTaskButton");
 const taskCreationMenu = document.getElementById("taskCreationMenu");
 const taskDeletionMenu = document.getElementById("taskDeletionMenu");
 const filterMenu = document.getElementById("filterMenu");
+const completeFilter = document.getElementById("completeFilter");
+const incompleteFilter = document.getElementById("incompleteFilter");
+const tagFilterList = document.getElementById("tagFilterList");
 const darkeningScreen = document.querySelector(".darkening-screen");
 const nameInput = taskCreationMenu.querySelector("#taskName");
 const dateInput = taskCreationMenu.querySelector("#taskDate");
@@ -55,6 +59,7 @@ let uid;
 let tagify;
 let userCompletedTasks = [];
 let taskItemToDelete = null;
+let currentTags = [];
 
 /* All the setup code that gets run once when the page loads */
 function renderPage() {
@@ -74,9 +79,6 @@ function renderPage() {
   cancelDeleteButton.addEventListener("click", toggleTaskDeletionMenu);
   confirmDeleteButton.addEventListener("click", confirmDeleteTask);
 
-  /* Add click event listeners for filter button */
-  // filterButton.addEventListener("click", toggleFilterMenu);
-
   /* Set up callback to get user's uid when auth info loads */
   onAuthReady((user) => {
     if (!user) {
@@ -91,6 +93,10 @@ function renderPage() {
   /* Set up callback to render task list from group doc in
    * database, and re-render when the group doc changes */
   onSnapshot(groupDoc, renderTasks);
+
+  /* Add click event listeners for task filter checkboxes */
+  completeFilter.addEventListener("click", reRender);
+  incompleteFilter.addEventListener("click", reRender);
 
   /* Add click event listeners to the buttons that shift the date */
   lowerDateButton.addEventListener("click", () => {
@@ -173,10 +179,6 @@ async function renderTasks(groupSnap) {
   /* Set group name */
   groupName.innerText = groupSnap.get("name");
 
-  /* Going to build an array to hold a list of every
-   * tag present in the group for autocomplete suggestions */
-  let currentTags = [];
-
   /* Array of every taskID in the group */
   const groupTasks = groupSnap.get("taskIDs");
 
@@ -188,8 +190,16 @@ async function renderTasks(groupSnap) {
     if (tagify) {
       tagify.whitelist = [];
     }
-
     return;
+  }
+
+  let filters = [];
+  for (let filter of Array.from(tagFilterList.children)) {
+    if (filter.firstElementChild.checked) {
+      filters.push((task) =>
+        task.taskData.tags.some(tagValueEquals({ value: filter.label })),
+      );
+    }
   }
 
   /* Get all tasks in the group */
@@ -213,7 +223,7 @@ async function renderTasks(groupSnap) {
     /* Only add tasks that are due the current week */
     if (sameWeekAs(curDate)(taskData)) {
       /* Make a new checklist item with the task's name;
-       * we can do it this way becaue we made CheckItem a
+       * we can do it this way because we made CheckItem a
        * custom HTML element*/
 
       let taskItem = new CheckItem(
@@ -223,14 +233,12 @@ async function renderTasks(groupSnap) {
         formatDueDate(taskData.date.toDate()),
         userCompletedTasks.includes(taskSnap.id),
         openDeleteModal,
-        renderTasks,
+        reRender,
       );
 
       let taskLabel = taskItem.querySelector(".task-name");
       taskLabel.innerText = taskData.name;
 
-      /* Add the new checklist item to the checklist */
-      // checklist.appendChild(taskItem);
       if (taskItem.isCompleted) {
         completeTasks.push(taskItem);
       } else {
@@ -238,29 +246,51 @@ async function renderTasks(groupSnap) {
       }
     }
 
-    /* This loop builds the deduplicated list of every tag
-     * in the group */
+    /* Update currentTags with new tags */
     for (const tag of taskData.tags) {
       if (!currentTags.some(tagValueEquals(tag))) {
         currentTags.push(tag);
+        tagFilterList.appendChild(new FilterItem(tag.value, "tag"));
       }
     }
   });
 
-  incompleteTasks.forEach((taskItem) => {
-    checklist.appendChild(taskItem);
-  });
+  /* add incomplete tasks, then complete tasks to the checklist */
+  const completionFilters = incompleteFilter.checked || completeFilter.checked;
+  if (incompleteFilter.checked || !completionFilters) {
+    incompleteTasks.filter(filterUnion(...filters)).forEach((taskItem) => {
+      checklist.appendChild(taskItem);
+    });
+  }
 
-  completeTasks.forEach((taskItem) => {
-    checklist.appendChild(taskItem);
-  });
+  if (completeFilter.checked || !completionFilters) {
+    completeTasks.filter(filterUnion(...filters)).forEach((taskItem) => {
+      checklist.appendChild(taskItem);
+    });
+  }
 
   /* Set date at top of page to today's date */
   setDate(curDate);
 
+  /* remove old tags from currentTags */
+  const hasTag = (tag) => (checkItem) =>
+    checkItem?.taskData?.tags?.some(tagValueEquals(tag));
+  let dups = [];
+  for (const tag of currentTags) {
+    if (!Array.from(checklist.children).some(hasTag(tag))) {
+      dups.push(tag);
+      document.getElementById(`${tag.value}Filter`).parentElement.remove();
+    }
+  }
+  currentTags = currentTags.filter((tag) => !dups.some(tagValueEquals(tag)));
+
+  /* Add click event listeners to tag filters */
+  for (let filter of Array.from(tagFilterList.children)) {
+    filter.addEventListener("click", reRender);
+  }
+
   /* The attribute name is confusing, but this sets the autocomplete
-   * suggestion list for the tag input to the list of the tags
-   * that we just built. */
+   * suggestion list for the tag input to the updated currentTags */
   tagify.whitelist = currentTags;
 }
 
@@ -307,8 +337,8 @@ async function shiftDate(ms) {
 /* Don't worry about this too much. Just a helper method for
  * filtering through tags to not add duplicates when
  * making a list of all tags in the group, but it does
- * what it does in a pretty confusing way. Just leave it
- * be. */
+ * what it does in a pretty confusing way (keyword is 'closures'
+ * if you're curious. */
 function tagValueEquals(tag1) {
   return (tag2) => {
     return tag1.value === tag2.value;
@@ -330,6 +360,20 @@ function sameWeekAs(date) {
     */
     const taskTime = task.date.toMillis();
     return taskTime >= lowBound.valueOf() && taskTime <= highBound.valueOf();
+  };
+}
+
+async function reRender() {
+  renderTasks(await getDoc(groupDoc));
+}
+
+function filterUnion(...filters) {
+  return (obj) => {
+    let result = filters.length == 0;
+    for (filter of filters) {
+      result ||= filter(obj);
+    }
+    return result;
   };
 }
 
