@@ -196,6 +196,7 @@ async function renderTasks(groupSnap) {
     return;
   }
 
+  /* Build an array of filter functions based on which tag filters are checked*/
   let filters = [];
   for (let filter of Array.from(tagFilterList.children)) {
     if (filter.firstElementChild.checked) {
@@ -333,8 +334,11 @@ function formatDueDate(date) {
 async function shiftDate(ms) {
   curDate.setTime(curDate.valueOf() + ms);
   setDate(curDate);
-  /* Re-render the tasks if we've already loaded auth info */
+  /* Re-render the tasks and clear filters if we've already loaded auth info */
   if (uid) {
+    for (filter of Array.from(tagFilterList.children)) {
+      filter.firstElementChild.checked = false;
+    }
     renderTasks(await getDoc(doc(db, "groups", groupID)));
   }
 }
@@ -356,13 +360,14 @@ function tagValueEquals(tag1) {
 function sameWeekAs(date) {
   const [lowBound, highBound] = weekBounds(date);
   return (task) => {
-    /*  
+    /*
     // In case of future due date debugging:
     console.log("Task: " + task.name);
     console.log("\tDue date: " + new Date(task.date.toMillis()));
     console.log("\tLow Bound: " + lowBound);
     console.log("\tHigh Bound: " + highBound);
     */
+
     const taskTime = task.date.toMillis();
     return taskTime >= lowBound.valueOf() && taskTime <= highBound.valueOf();
   };
@@ -385,7 +390,7 @@ function filterIntersection(...filters) {
 /* Helper function that returns an array of the first and last
  * days of the week the given Date is in, as Date objects */
 function weekBounds(date) {
-  const day = date.getDay();
+  const day = date.getUTCDay();
   const lowBound = new Date(date.valueOf() - day * oneDay);
   lowBound.setUTCHours(0);
   lowBound.setUTCMinutes(0);

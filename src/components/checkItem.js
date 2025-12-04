@@ -50,7 +50,9 @@ export class CheckItem extends HTMLElement {
 
     /*check date to mark urgent */
     let today = new Date(Date.now());
-    if (this.taskData.date.toDate().getUTCDay() === today.getDay()) {
+    today.setHours(0, 0, 0, 0);
+    today.setUTCHours(0, 0, 0, 0);
+    if (this.taskData.date.toDate().getTime() === today.getTime()) {
       this.classList.add("urgent");
     }
     /* Determine the initial icon state based on completion status */

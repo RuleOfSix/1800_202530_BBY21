@@ -13,12 +13,6 @@ class Footer extends HTMLElement {
             class="navbar-nav container-fluid px-2 m-0 d-flex flex-row align-items-center justify-content-between"
           >
             <li class="nav-item d-flex flex-row justify-content-start">
-              <a
-                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row"
-                href="${document.referrer}"
-              >
-                <span class="material-icons-outlined icon-align fs-1">arrow_back_ios</span>&nbsp;Back
-              </a>
             </li>
             <li class="nav-item d-flex flex-row justify-content-center">
               <a
