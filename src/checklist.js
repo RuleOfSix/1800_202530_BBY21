@@ -336,7 +336,7 @@ async function shiftDate(ms) {
   setDate(curDate);
   /* Re-render the tasks and clear filters if we've already loaded auth info */
   if (uid) {
-    for (filter of Array.from(tagFilterList.children)) {
+    for (let filter of Array.from(tagFilterList.children)) {
       filter.firstElementChild.checked = false;
     }
     renderTasks(await getDoc(doc(db, "groups", groupID)));
