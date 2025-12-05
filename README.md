@@ -1,25 +1,24 @@
-# Elmo Hikes
+# ListingHub
 
 ## Overview
 
-Elmo Hikes is a client-side JavaScript web application that helps users discover and explore hiking trails. The app displays a curated list of hike trails, each with details such as name, location, difficulty, and an image. Users can browse the list and mark their favorite trails for easy access later.
+ListingHub is a mobile-first web application designed to organize course information and track deadlines using a shared checklist. Users can create or join the groups to collaborate on tasks with other members. While task lists are shared within the group, completion status is tracked individually for each user. Tasks also feature due dates and tags, allowing users to filter item efficiently.
 
-Developed for the COMP 1800 course, this project applies User-Centred Design practices and agile project management, and demonstrates integration with Firebase backend services for storing user favorites.
+Developed for the COMP 1800 course, this project applies User-Centred Design practices and Agile Project Management. It demonstrates full-stack integration with Firebase services for data storage and authentication.
 
 ---
 
 ## Features
 
-- Browse a list of curated hiking trails with images and details
-- Mark and unmark trails as favorites
-- View a personalized list of favorite hikes
-- Responsive design for desktop and mobile
+- **Group Collaboration:** Create or join groups to share tasks with team members.
+- **Easy Invitations:** Quickly invite new members by copying and sharing a unique group URL.
+- **Individual Progress:** While tasks are shared, completion status is marked individually per user.
+- **Task Management:** Organize items with due dates and tags for easy filtering.
+- **Urgent Indicator:** Task items automatically turn red when the due date arrives to visually highlight urgency.
 
 ---
 
 ## Technologies Used
-
-Example:
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Build Tool**: [Vite](https://vitejs.dev/)
@@ -30,43 +29,39 @@ Example:
 
 ## Usage
 
-1. Open your browser and visit `http://localhost:3000`.
-2. Browse the list of hiking trails displayed on the main page.
-3. Click the heart icon (or similar) to mark a trail as a favorite.
-4. View your favorite hikes in the favorites section.
+1. Visit `https://listinghub.ruleofsix.ca/ `.
+2. Create a group or join an existing one via a shared link.
+3. Add tasks for the group, including due dates and tags.
+4. Check off tasks as you finish them.
 
 ---
 
 ## Project Structure
 
 ```
-elmo-hikes/
-├── src/
-│   ├── main.js
-├── styles/
-│   └── style.css
-├── public/
-├── images/
-├── index.html
+1800_202530_BBY21 /           - HTML and project config files
+├── src/                      - JavaScript logic and Firebase integration
+│   ├── components/           - Reusable UI Components
+├── styles/                   - Main CSS stylesheet
 ├── package.json
-├── README.md
+└── README.md
 ```
 
 ---
 
 ## Contributors
 
-- Min - BCIT CST Student with a passion for outdoor adventures and user-friendly applications. Fun fact: Loves solving Rubik's Cubes in under a minute.
-- Justin - BCIT CST Student who would rather be asleep, ut still enjoys coding. Fun fact: Has won the U18 NSIHL playoffs
+- **Min Lee** - BCIT CST Student with a passion for web devlopment and user-friendly applications. Fun fact: Writes code without a single drop of coffee.
+- **Justin Watson** - BCIT CST Student who would rather be asleep, but still enjoys coding. Fun fact: Has won the U18 NSIHL playoffs
 - **June Pyle** - BCIT CST Student with a passion for networking and low-level software. Fun fact: Loves solving Rubik's Cubes in under a minute.
 
 ---
 
 ## Acknowledgments
 
-- Trail data and images are for demonstration purposes only.
 - Code snippets were adapted from resources such as [Stack Overflow](https://stackoverflow.com/) and [MDN Web Docs](https://developer.mozilla.org/).
-- Icons sourced from [FontAwesome](https://fontawesome.com/) and images from [Unsplash](https://unsplash.com/).
+- Icons sourced from [Google Icons](https://fonts.google.com/icons/).
+- API sourced from [Tagify] (https://github.com/yairEO/tagify).
 
 ---
 
@@ -74,14 +69,14 @@ elmo-hikes/
 
 ### Limitations
 
-- Limited trail details (e.g., no live trail conditions).
-- Accessibility features can be further improved.
+- The application prioritizes core functionality over advanced features or complex UI elements.
+- The UI layout and theme are currently fixed.
 
 ### Future Work
 
-- Implement map view and trailhead directions.
-- Add filtering and sorting options (e.g., by difficulty, distance).
-- Create a dark mode for better usability in low-light conditions.
+- Implement a calendar view to visualize upcoming deadlines.
+- Add a profile setting page to allow users to change passwords and manage app preferences.
+- Create a light mode to provide visual customization options for users.
 
 ---
 
