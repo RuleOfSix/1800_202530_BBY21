@@ -4,6 +4,12 @@
 // Part of the COMP1800 Projects 1 Course (BCIT).
 // Starter code provided for students to use and adapt.
 // Manages the login/signup form behaviour and redirects.
+//
+// BBY21 notes: This code has been largely left as-is to focus on
+// our core functionality; the only minor change is adding some
+// redirect logic to support the flow of clicking a group link ->
+// being redirected to log in/sign up if not currently logged in ->
+// automatically being added to the group after logging in.
 // -------------------------------------------------------------
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -30,6 +36,9 @@ function initAuthUI() {
   const signupForm = document.getElementById("signupForm");
   const url = new URL(window.location.href);
   const groupID = url.searchParams.get("groupID");
+
+  // Essentially: preserve groupID parameter when redirecting if such a parameter exists.
+  // This is what enables the group links to function even after being redirected to log in
   const redirectUrl = groupID ? `main?groupID=${groupID}` : "main";
 
   // --- Helper Functions ---

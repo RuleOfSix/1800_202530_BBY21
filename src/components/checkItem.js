@@ -21,17 +21,23 @@ export class CheckItem extends HTMLElement {
     reRenderChecklist,
   ) {
     super();
+
+    /* State about the task passed down from checklist.js */
     this.uid = uid;
     this.taskID = taskID;
     this.taskData = taskData;
     this.taskDate = taskDate;
-    this.createdBy = taskData.createdBy;
     this.isCompleted = isCompleted;
+
+    /* Callbacks to commmunicate back up to checklist.js */
     this.openDeleteModal = openDeleteModal;
     this.reRenderChecklist = reRenderChecklist;
+
+    /* Relevant firestore document references for later use */
     this.groupDoc = doc(db, "groups", this.taskData.groupID);
     this.userDoc = doc(db, "users", this.uid);
     this.taskDoc = doc(db, "tasks", this.taskID);
+
     this.addEventListener("click", this.toggleCheck);
     this.render();
   }
@@ -48,13 +54,14 @@ export class CheckItem extends HTMLElement {
       "checklist-item",
     );
 
-    /*check date to mark urgent */
+    /* Check date to mark urgent */
     let today = new Date(Date.now());
     today.setHours(0, 0, 0, 0);
     today.setUTCHours(0, 0, 0, 0);
     if (this.taskData.date.toDate().getTime() === today.getTime()) {
       this.classList.add("urgent");
     }
+
     /* Determine the initial icon state based on completion status */
     let iconText = "";
     if (this.isCompleted) {
@@ -67,7 +74,7 @@ export class CheckItem extends HTMLElement {
 
     /* Only the person who created the task can see the delete button */
     let deleteIconHTML = "";
-    if (this.createdBy === this.uid) {
+    if (this.taskData.createdBy === this.uid) {
       deleteIconHTML = ` <span class="material-symbols-outlined delete-icon btn-icon icon-align fs-1 p-1 ms-auto">
                         delete
                       </span>`;
@@ -111,18 +118,18 @@ export class CheckItem extends HTMLElement {
     if (this.classList.contains("checked")) {
       this.classList.remove("checked");
       icon.innerText = "check_box_outline_blank";
-      this.removeCompletedTask();
+      this.markIncomplete();
     } else {
       this.classList.add("checked");
       icon.innerText = "check_box";
-      this.addCompletedTask();
+      this.markComplete();
     }
 
     this.reRenderChecklist();
   }
 
   /* Adds the task ID to the user's completed tasks array in Firestore */
-  async addCompletedTask() {
+  async markComplete() {
     await updateDoc(this.userDoc, {
       tasks: arrayUnion(this.taskID),
     });
@@ -130,13 +137,13 @@ export class CheckItem extends HTMLElement {
 
   /* Removes the task ID from ther user's completed tasks array in Firestore
    * Used when unchecking a task */
-  async removeCompletedTask() {
+  async markIncomplete() {
     await updateDoc(this.userDoc, {
       tasks: arrayRemove(this.taskID),
     });
   }
 
-  /* Deletes the task from the group's list and removes the task document */
+  /* Removes the task from the group's list and deletes the task document */
   async deleteTask() {
     await updateDoc(this.groupDoc, {
       taskIDs: arrayRemove(this.taskID),
@@ -145,4 +152,5 @@ export class CheckItem extends HTMLElement {
     await deleteDoc(this.taskDoc);
   }
 }
+
 customElements.define("check-item", CheckItem);

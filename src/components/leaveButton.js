@@ -7,9 +7,10 @@ import {
   getDoc,
 } from "firebase/firestore";
 
-
-
-
+/* Button for leaving groups, made as a custom element to be
+ * easily created programmatically for each group listing
+ * on main.html
+ */
 export class LeaveButton extends HTMLElement {
   constructor() {
     super();
@@ -17,28 +18,23 @@ export class LeaveButton extends HTMLElement {
     this.addEventListener("click", this.leaveGroup);
   }
 
-  
-async leaveGroup(){
-  let uid = this.getAttribute("uid");
-  let groupID = this.getAttribute("groupID");
-  console.log(`"${uid}"`);
-  console.log(`"${groupID}"`);
-  const userDocRef = doc(db, "users", uid);
-  const groupDocRef = doc(db, "groups", groupID);
-  await updateDoc(userDocRef, { groupIDs: arrayRemove(groupID)});
-  await updateDoc(groupDocRef, { userIDs: arrayRemove(uid)});
-   location.reload();
-}
-  
-
-
-
-
+  async leaveGroup() {
+    let uid = this.getAttribute("uid");
+    let groupID = this.getAttribute("groupID");
+    console.log(`"${uid}"`);
+    console.log(`"${groupID}"`);
+    const userDocRef = doc(db, "users", uid);
+    const groupDocRef = doc(db, "groups", groupID);
+    await updateDoc(userDocRef, { groupIDs: arrayRemove(groupID) });
+    await updateDoc(groupDocRef, { userIDs: arrayRemove(uid) });
+    location.reload();
+  }
 
   render() {
-    this.innerHTML = `<span class="material-icons-outlined float-end fs-1 icon-align btn-icon">
-            cancel
-          </span>
+    this.innerHTML = `
+      <span class="material-icons-outlined float-end fs-1 icon-align btn-icon">
+        cancel
+      </span>
     `;
   }
 }

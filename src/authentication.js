@@ -1,6 +1,8 @@
 // Import the initialized Firebase Authentication object and Database object
 import { auth, db } from "/src/firebaseConfig.js";
 
+// BBY21 notes: this is entirely unchanged so that we could focus on our core functionality
+
 // Import specific functions from the Firebase Auth SDK
 import {
   signInWithEmailAndPassword,

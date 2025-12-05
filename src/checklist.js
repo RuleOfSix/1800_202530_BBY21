@@ -168,7 +168,7 @@ function openDeleteModal(deleteClickedItem) {
   toggleTaskDeletionMenu();
 }
 
-/* Function executed when 'confirm' is clicked in the modal */
+/* Function executed when 'confirm' is clicked in the delete modal */
 function confirmDeleteTask() {
   if (taskItemToDelete) {
     taskItemToDelete.deleteTask();
@@ -176,8 +176,17 @@ function confirmDeleteTask() {
   toggleTaskDeletionMenu();
 }
 
-/* Renders all tasks in the group, and generates the tagify
- * autocomplete suggestion list. */
+/* Queries Firestore for the records of each task in the group and
+ * renders all tasks and the corresponding list of tag filters based on the
+ * current week and the currently-selected filters. This is a big function
+ * and the core of the app so things are commented step-by-step.
+ *
+ * Ideally, we would in the future separate out local re-rendering (changing task completion,
+ * filtering out tasks, etc) with database fetches (when tasks are added or destroyed).
+ * That would improve performance a lot, but would also require a lot of restructuring
+ * of the core app logic, so it's been deprioritized to focus on nailing the app's
+ * functionality.
+ */
 async function renderTasks(groupSnap) {
   /* Set group name */
   groupName.innerText = groupSnap.get("name");
@@ -216,6 +225,13 @@ async function renderTasks(groupSnap) {
 
   /* Clear checklist before re-rendering */
   checklist.innerHTML = "";
+
+  /*
+   * The checkItem elements for incomplete or complete tasks will be
+   * placed into the corresponding array as they are created, and then
+   * will be all added at once, with incomplete tasks being added first so they
+   * appear at the top of the page
+   */
   let incompleteTasks = [];
   let completeTasks = [];
 
@@ -228,7 +244,7 @@ async function renderTasks(groupSnap) {
     if (sameWeekAs(curDate)(taskData)) {
       /* Make a new checklist item with the task's name;
        * we can do it this way because we made CheckItem a
-       * custom HTML element*/
+       * custom HTML element */
 
       let taskItem = new CheckItem(
         uid,
@@ -259,7 +275,13 @@ async function renderTasks(groupSnap) {
     }
   });
 
-  /* add incomplete tasks, then complete tasks to the checklist */
+  /*
+   * Add incomplete tasks, then complete tasks to the checklist. Each type
+   * of task (complete or incomplete) will only be added if they shouldn't be
+   * filtered out; being able to just check booleans in this way is more
+   * efficient than using the filter functions for these two filters in
+   * particular.
+   */
   const completionFilters = incompleteFilter.checked || completeFilter.checked;
   if (incompleteFilter.checked || !completionFilters) {
     incompleteTasks
@@ -316,6 +338,9 @@ function setDate(date) {
   dateHeader.innerText = `${lowStr} - ${highStr}`;
 }
 
+/* Takes in a Date object, returns a String formatting the date as
+ * "[weekday], [month] [day]". Used for the due dates on CheckItems.
+ */
 function formatDueDate(date) {
   const dateParts = dueDateFormat.formatToParts(date);
   return dateParts
@@ -343,11 +368,12 @@ async function shiftDate(ms) {
   }
 }
 
-/* Don't worry about this too much. Just a helper method for
- * filtering through tags to not add duplicates when
- * making a list of all tags in the group, but it does
- * what it does in a pretty confusing way (keyword is 'closures'
- * if you're curious. */
+/*
+ * One of several helper methods for filtering in this page
+ * that utilize currying. Calling the function returns a function
+ * with no arguments that's been pre-loaded with the value you want
+ * so that you can pass it to .filter() and the like.
+ */
 function tagValueEquals(tag1) {
   return (tag2) => {
     return tag1.value === tag2.value;
@@ -355,7 +381,8 @@ function tagValueEquals(tag1) {
 }
 
 /* Helper method for filtering tasks based on if the timestamp
- * is in the same week as the given Date.
+ * is in the same week as the given Date. Uses a similar technique
+ * as the above function.
  */
 function sameWeekAs(date) {
   const [lowBound, highBound] = weekBounds(date);
@@ -373,10 +400,19 @@ function sameWeekAs(date) {
   };
 }
 
+/* Simple helper method. Gets passed to CheckItems so that they can
+ * call it back to rerender the page when they get checked. */
 async function reRender() {
   renderTasks(await getDoc(groupDoc));
 }
 
+/*
+ * More currying. Given an array of functions that each take one
+ * argument and return a boolean, this produces one function that
+ * is equivalent to ANDing together the results of all the given functions
+ * on the same input. As you might guess based on the name, it's used
+ * to combine the different filters that the user may select.
+ */
 function filterIntersection(...filters) {
   return (obj) => {
     let result = true;
@@ -403,5 +439,6 @@ function weekBounds(date) {
   highBound.setUTCMilliseconds(0);
   return [lowBound, highBound];
 }
+
 /* Call the initial page startup logic */
 renderPage();

@@ -30,6 +30,8 @@ const copyLabel = document.getElementById("copyLabel");
 
 addGroupButton.addEventListener("click", toggleGroupCreationMenu);
 
+/* Validates the group name and creates the new group entry in Firestore
+ */
 submitButton.addEventListener("click", async () => {
   groupErrorBlock.hidden = true;
   const groupName = nameInput?.value?.trim() ?? "";
@@ -158,6 +160,8 @@ export function renderGroupSelection(groupDetails) {
       .addEventListener("click", toggleGroupShareMenu(group.groupID));
   });
 }
+
+// Callbacks that toggle modals
 
 function toggleGroupCreationMenu() {
   groupCreationMenu.hidden = !groupCreationMenu?.hidden;

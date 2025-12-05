@@ -13,6 +13,7 @@ class Footer extends HTMLElement {
             class="navbar-nav container-fluid px-2 m-0 d-flex flex-row align-items-center justify-content-between"
           >
             <li class="nav-item d-flex flex-row justify-content-start">
+              <!-- Placeholder item for spacing and possibly future icons -->
             </li>
             <li class="nav-item d-flex flex-row justify-content-center">
               <a
@@ -23,12 +24,7 @@ class Footer extends HTMLElement {
               </a>
             </li>
             <li class="nav-item d-flex flex-row justify-content-end">
-              <a
-                class="nav-link fs-5 d-flex flex-column align-items-center flex-lg-row d-none"
-                href="wip.html"
-              >
-                <span class="material-icons-outlined icon-align fs-1">settings</span>&nbsp;Settings
-              </a>
+              <!-- Placeholder item for spacing and possibly future icons -->
             </li>
           </ul>
         </div>
