@@ -1,3 +1,8 @@
+/*
+ * This is a reusable component for the close button
+ * of modals that I made for utility; it assumes itself
+ * to be inside a modal and has built-in behavior to close the modal
+ * */
 class CloseButton extends HTMLElement {
   constructor() {
     super();
@@ -15,7 +20,11 @@ class CloseButton extends HTMLElement {
   }
 
   closeParent() {
+    /* Hide the modal */
     this.parentNode.hidden = true;
+
+    /* ".darkening-screen" is the class of the element used to darken
+     * out the rest of the screen behind a modal */
     const darkeningScreen = document.querySelector(".darkening-screen");
     if (darkeningScreen) {
       darkeningScreen.hidden = true;
